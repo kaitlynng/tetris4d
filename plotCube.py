@@ -7,7 +7,7 @@ fig = plt.figure()
 
 def getCubeDef(corner):
     #corner type: np array
-    corner_x, corner_y, corner_z = np.zeros(corner.shape), np.zeros(corner.shape), np.zeros(corner.shape)
+    corner_x, corner_y, corner_z = np.zeros(corner.shape)
     corner = corner-0.5
     corner_x += corner[:]
     corner_y += corner[:]
