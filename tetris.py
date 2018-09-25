@@ -24,6 +24,4 @@ shape5 = np.array([[0,0,0,0],[0,1,0,0]])
 #    time.sleep(1)
 #    plt.clf()
 
-plotShape(shape3)
-
-# plotShape(rotate4D(shape3, 5, 0))
+plotShape(rotate4D(shape3, 5, 0))

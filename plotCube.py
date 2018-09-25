@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection, Line3DCollection
 
-fig = plt.figure()
+fig, ax = plt.subplots(2, 2, subplot_kw=dict(projection='3d'))
 
 def getCubeDef(corner):
     #corner type: np array
@@ -78,39 +78,31 @@ def plotShape(shape4D_dat):
     #hape4D_dat type: no matrix of coordinates
 
     #plot xyz
-    ax = fig.add_subplot(221, projection='3d')
-    # plt.pause(0.0001)
-    plot3D(shape4D_dat[:, :3], ax)
-    ax.set_title('XYZ axis')
-    ax.set_xlabel('X')
-    ax.set_ylabel('Y')
-    ax.set_zlabel('Z')
+    plot3D(shape4D_dat[:, :3], ax[0,0])
+    ax[0,0].set_title('XYZ axis')
+    ax[0,0].set_xlabel('X')
+    ax[0,0].set_ylabel('Y')
+    ax[0,0].set_zlabel('Z')
 
     #plot yzu
-    ax = fig.add_subplot(222, projection='3d')
-    # plt.pause(0.0001)
-    plot3D(shape4D_dat[:, 1:], ax)
-    ax.set_title('YZU axis')
-    ax.set_xlabel('Y')
-    ax.set_ylabel('Z')
-    ax.set_zlabel('U')
+    plot3D(shape4D_dat[:, 1:], ax[0,1])
+    ax[0,1].set_title('YZU axis')
+    ax[0,1].set_xlabel('Y')
+    ax[0,1].set_ylabel('Z')
+    ax[0,1].set_zlabel('U')
 
     #plot xzu
-    ax = fig.add_subplot(223, projection='3d')
-    # plt.pause(0.0001)
-    plot3D(shape4D_dat[:, [0,2,3]], ax)
-    ax.set_title('XZU axis')
-    ax.set_xlabel('X')
-    ax.set_ylabel('Z')
-    ax.set_zlabel('U')
+    plot3D(shape4D_dat[:, [0,2,3]], ax[1,0])
+    ax[1,0].set_title('XZU axis')
+    ax[1,0].set_xlabel('X')
+    ax[1,0].set_ylabel('Z')
+    ax[1,0].set_zlabel('U')
 
     #plot xyu
-    ax = fig.add_subplot(224, projection='3d')
-    # plt.pause(0.0001)
-    plot3D(shape4D_dat[:, [0,1,3]], ax)
-    ax.set_title('XYU axis')
-    ax.set_xlabel('X')
-    ax.set_ylabel('Y')
-    ax.set_zlabel('U')
+    plot3D(shape4D_dat[:, [0,1,3]], ax[1,1])
+    ax[1,1].set_title('XYU axis')
+    ax[1,1].set_xlabel('X')
+    ax[1,1].set_ylabel('Y')
+    ax[1,1].set_zlabel('U')
 
     plt.show()
