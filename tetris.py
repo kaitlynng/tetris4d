@@ -16,6 +16,7 @@ shape2 = np.array([[1, 0, 0], [1, 0, 1], [1, 1, 1], [0, 1, 1]])
 
 #4d shapes
 shape3 = np.array([[0,0,0,1], [0,1,0,0],[1,0,0,0],[0,0,1,0]])
+# testshape = np.array([[0,0,0,0]])
 
 print(shape3)
 print(rotate4D(shape3, 3, 90))
