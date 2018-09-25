@@ -1,0 +1,115 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+from mpl_toolkits.mplot3d.art3d import Poly3DCollection, Line3DCollection
+
+fig = plt.figure()
+
+def getCubeDef(corner):
+    corner_x, corner_y, corner_z = [], [], []
+    corner_x += corner
+    corner_y += corner
+    corner_z += corner
+    corner_x[0], corner_y[1], corner_z[2] = corner_x[0]+1, corner_y[1]+1, corner_z[2]+1
+    return [corner, corner_x, corner_y, corner_z ]
+
+def plotCube(cube_definition, subplot):
+#change cube_definition from normal python list to list of np arrays
+    cube_definition_array = [
+        np.array(item)
+        for item in cube_definition
+    ]
+# equate points with cube_definition_array without assignment
+    points = []
+    points += cube_definition_array
+
+#define the three axis vectors (x vector, y vector, z vector)
+    vectors = [
+        cube_definition_array[1] - cube_definition_array[0],
+        cube_definition_array[2] - cube_definition_array[0],
+        cube_definition_array[3] - cube_definition_array[0]
+    ]
+
+# add the rest of the points in the cube
+    points += [cube_definition_array[0] + vectors[0] + vectors[1]] #corner + xvec + yvec
+    points += [cube_definition_array[0] + vectors[0] + vectors[2]] #corner + xvec + zvec
+    points += [cube_definition_array[0] + vectors[1] + vectors[2]] #coner + yvec + zvec
+    points += [cube_definition_array[0] + vectors[0] + vectors[1] + vectors[2]] #furthest point
+
+#points are: (0,0,0), (1,0,0), (0,1,0), (0,0,1), (1,1,0), (1,0,1), (0,1,1), (1,1,1)
+
+#convert points to np array
+    points = np.array(points)
+
+#edges give the wireframe to pass to Poly3DCollection to form faces
+    edges = [
+        [points[0], points[3], points[5], points[1]],
+        [points[1], points[5], points[7], points[4]],
+        [points[4], points[2], points[6], points[7]],
+        [points[2], points[6], points[3], points[0]],
+        [points[0], points[2], points[4], points[1]],
+        [points[3], points[6], points[7], points[5]]
+    ]
+
+#form faces using poly3DCollection
+    faces = Poly3DCollection(edges, linewidths=1, edgecolors='k')
+    faces.set_facecolor((0,0,1,0.1))
+
+    subplot.add_collection3d(faces)
+
+    # Plot the points themselves to scale the axes, probably not needed actually
+    subplot.scatter(points[:,0], points[:,1], points[:,2], s=0)
+
+def adjustAxis(X, Y, Z, subplot):
+    max_range = np.array([X.max()-X.min(), Y.max()-Y.min(), Z.max()-Z.min()]).max()
+    Xb = 0.5*max_range*np.mgrid[-1:2:2,-1:2:2,-1:2:2][0].flatten() + 0.5*(X.max()+X.min())
+    Yb = 0.5*max_range*np.mgrid[-1:2:2,-1:2:2,-1:2:2][1].flatten() + 0.5*(Y.max()+Y.min())
+    Zb = 0.5*max_range*np.mgrid[-1:2:2,-1:2:2,-1:2:2][2].flatten() + 0.5*(Z.max()+Z.min())
+    # Comment or uncomment following both lines to test the fake bounding box:
+    for xb, yb, zb in zip(Xb, Yb, Zb):
+        subplot.plot([xb], [yb], [zb], 'w')
+
+def plot3D(shape3D_dat, subplot):
+    for item in shape3D_dat:
+        plotCube(getCubeDef(item), subplot)
+    [X, Y, Z] = np.transpose(shape3D_dat)
+    adjustAxis(X, Y, Z, subplot)
+
+def plotShape(shape4D_dat):
+    #plot xyz
+    ax = fig.add_subplot(221, projection='3d')
+    # plt.pause(0.0001)
+    plot3D(shape4D_dat[:, :3].tolist(), ax)
+    ax.set_title('XYZ axis')
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.set_zlabel('Z')
+
+    #plot yzu
+    ax = fig.add_subplot(222, projection='3d')
+    # plt.pause(0.0001)
+    plot3D(shape4D_dat[:, 1:].tolist(), ax)
+    ax.set_title('YZU axis')
+    ax.set_xlabel('Y')
+    ax.set_ylabel('Z')
+    ax.set_zlabel('U')
+
+    #plot xzu
+    ax = fig.add_subplot(223, projection='3d')
+    # plt.pause(0.0001)
+    plot3D(shape4D_dat[:, [0,2,3]].tolist(), ax)
+    ax.set_title('XZU axis')
+    ax.set_xlabel('X')
+    ax.set_ylabel('Z')
+    ax.set_zlabel('U')
+
+    #plot xyu
+    ax = fig.add_subplot(224, projection='3d')
+    # plt.pause(0.0001)
+    plot3D(shape4D_dat[:, [0,1,3]].tolist(), ax)
+    ax.set_title('XYU axis')
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.set_zlabel('U')
+
+    plt.show()
