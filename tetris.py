@@ -11,7 +11,7 @@ a = 0
 # plt.ion()
 
 #4d shapes
-shape3 = np.array([[0,0,0,1], [0,1,0,0],[1,0,0,0],[0,0,1,0]])
+shape3 = np.array([[0,0,0,0],[0,0,0,1], [0,1,0,0],[1,0,0,0],[0,0,1,0]])
 shape4 = np.array([[0,0,0,0],[0,1,0,0],[0,0,1,0],[0,1,1,0]])
 shape5 = np.array([[0,0,0,0],[0,1,0,0]])
 # testshape = np.array([[0,0,0,0]])
@@ -24,4 +24,5 @@ shape5 = np.array([[0,0,0,0],[0,1,0,0]])
 #    time.sleep(1)
 #    plt.clf()
 
+# plotShape_slice(rotate4D(shape3,5,0), 0)
 plotShape(rotate4D(shape3, 5, 0))

@@ -4,6 +4,7 @@ from mpl_toolkits.mplot3d import Axes3D
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection, Line3DCollection
 
 fig, ax = plt.subplots(2, 2, subplot_kw=dict(projection='3d'))
+fig2 = plt.figure()
 
 def getCubeDef(corner):
     #corner type: np array
@@ -104,5 +105,24 @@ def plotShape(shape4D_dat):
     ax[1,1].set_xlabel('X')
     ax[1,1].set_ylabel('Y')
     ax[1,1].set_zlabel('U')
+
+    plt.show()
+
+def plotShape_slice(shape4D_dat, u_coord):
+    ax = fig2.add_subplot(111, projection='3d')
+    shape4D_slice = []
+    for x in range(0,np.shape(shape4D_dat)[0]):
+        if shape4D_dat[x,3] == u_coord:
+            shape4D_slice += [shape4D_dat[x]]
+    print(type(shape4D_slice))
+    shape4D_slice = np.array(shape4D_slice)
+    print(shape4D_slice)
+    print(type(shape4D_slice))
+
+    plot3D(shape4D_slice[:, :3], ax)
+    ax.set_title('XYZ axis, slice u = %d'%u_coord)
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.set_zlabel('Z')
 
     plt.show()
