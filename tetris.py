@@ -1,5 +1,6 @@
 import time
 import numpy as np
+import random as rand
 import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
 
@@ -24,5 +25,8 @@ shape5 = np.array([[0,0,0,0],[0,1,0,0]])
 #    time.sleep(1)
 #    plt.clf()
 
-# plotShape_slice(rotate4D(shape3,5,0), 0)
-plotShape(rotate4D(shape3, 5, 0))
+colour = [rand.random(), rand.random(), rand.random(), 0.1]
+plotShape(shape3, colour)
+plotShape_slice(rotate4D(shape3,5,0), 0, colour)
+
+plt.show()

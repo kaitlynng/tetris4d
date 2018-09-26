@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection, Line3DCollection
 
-fig, ax = plt.subplots(2, 2, subplot_kw=dict(projection='3d'))
-fig2 = plt.figure()
+fig, axes = plt.subplots(2, 2, subplot_kw=dict(projection='3d'))
+fig2, ax = plt.subplots(1, 1, subplot_kw=dict(projection='3d'))
 
 def getCubeDef(corner):
     #corner type: np array
@@ -17,7 +17,7 @@ def getCubeDef(corner):
     #function returns list of np arrays
     return [corner, corner_x, corner_y, corner_z]
 
-def plotCube(cube_definition_array, subplot):
+def plotCube(cube_definition_array, subplot, shape4D_colour):
 # equate points with cube_definition_array without assignment
     points = []
     points += cube_definition_array
@@ -52,7 +52,7 @@ def plotCube(cube_definition_array, subplot):
 
 #form faces using poly3DCollection
     faces = Poly3DCollection(edges, linewidths=1, edgecolors='k')
-    faces.set_facecolor((0,0,1,0.1))
+    faces.set_facecolor(shape4D_colour)
 
     subplot.add_collection3d(faces)
 
@@ -68,61 +68,53 @@ def adjustAxis(X, Y, Z, subplot):
     for xb, yb, zb in zip(Xb, Yb, Zb):
         subplot.plot([xb], [yb], [zb], 'w')
 
-def plot3D(shape3D_dat, subplot):
+def plot3D(shape3D_dat, subplot, shape4D_colour):
     #shape_3D_dat type: np array
     for item in range(0, shape3D_dat.shape[0]):
-        plotCube(getCubeDef(shape3D_dat[item]), subplot)
+        plotCube(getCubeDef(shape3D_dat[item]), subplot, shape4D_colour)
     [X, Y, Z] = np.transpose(shape3D_dat)
     adjustAxis(X, Y, Z, subplot)
 
-def plotShape(shape4D_dat):
+def plotShape(shape4D_dat, shape4D_colour):
     #hape4D_dat type: no matrix of coordinates
 
     #plot xyz
-    plot3D(shape4D_dat[:, :3], ax[0,0])
-    ax[0,0].set_title('XYZ axis')
-    ax[0,0].set_xlabel('X')
-    ax[0,0].set_ylabel('Y')
-    ax[0,0].set_zlabel('Z')
+    plot3D(shape4D_dat[:, :3], axes[0,0], shape4D_colour)
+    axes[0,0].set_title('XYZ axis')
+    axes[0,0].set_xlabel('X')
+    axes[0,0].set_ylabel('Y')
+    axes[0,0].set_zlabel('Z')
 
     #plot yzu
-    plot3D(shape4D_dat[:, 1:], ax[0,1])
-    ax[0,1].set_title('YZU axis')
-    ax[0,1].set_xlabel('Y')
-    ax[0,1].set_ylabel('Z')
-    ax[0,1].set_zlabel('U')
+    plot3D(shape4D_dat[:, 1:], axes[0,1], shape4D_colour)
+    axes[0,1].set_title('YZU axis')
+    axes[0,1].set_xlabel('Y')
+    axes[0,1].set_ylabel('Z')
+    axes[0,1].set_zlabel('U')
 
     #plot xzu
-    plot3D(shape4D_dat[:, [0,2,3]], ax[1,0])
-    ax[1,0].set_title('XZU axis')
-    ax[1,0].set_xlabel('X')
-    ax[1,0].set_ylabel('Z')
-    ax[1,0].set_zlabel('U')
+    plot3D(shape4D_dat[:, [0,2,3]], axes[1,0], shape4D_colour)
+    axes[1,0].set_title('XZU axis')
+    axes[1,0].set_xlabel('X')
+    axes[1,0].set_ylabel('Z')
+    axes[1,0].set_zlabel('U')
 
     #plot xyu
-    plot3D(shape4D_dat[:, [0,1,3]], ax[1,1])
-    ax[1,1].set_title('XYU axis')
-    ax[1,1].set_xlabel('X')
-    ax[1,1].set_ylabel('Y')
-    ax[1,1].set_zlabel('U')
+    plot3D(shape4D_dat[:, [0,1,3]], axes[1,1], shape4D_colour)
+    axes[1,1].set_title('XYU axis')
+    axes[1,1].set_xlabel('X')
+    axes[1,1].set_ylabel('Y')
+    axes[1,1].set_zlabel('U')
 
-    plt.show()
-
-def plotShape_slice(shape4D_dat, u_coord):
-    ax = fig2.add_subplot(111, projection='3d')
+def plotShape_slice(shape4D_dat, u_coord, shape4D_colour):
     shape4D_slice = []
     for x in range(0,np.shape(shape4D_dat)[0]):
         if shape4D_dat[x,3] == u_coord:
             shape4D_slice += [shape4D_dat[x]]
-    print(type(shape4D_slice))
     shape4D_slice = np.array(shape4D_slice)
-    print(shape4D_slice)
-    print(type(shape4D_slice))
 
-    plot3D(shape4D_slice[:, :3], ax)
+    plot3D(shape4D_slice[:, :3], ax, shape4D_colour)
     ax.set_title('XYZ axis, slice u = %d'%u_coord)
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
     ax.set_zlabel('Z')
-
-    plt.show()
