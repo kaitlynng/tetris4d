@@ -24,8 +24,7 @@ shapes = np.array([[[0,0,0,0],[1,0,0,0],[2,0,0,0],[3,0,0,0]],
                    [[0,0,0,0],[1,0,0,0],[0,1,0,0],[1,1,0,0]],
                    [[0,0,0,0],[0,1,0,0],[0,1,1,0],[1,1,1,0]]])
 
-#mirror image (duplicate) of shapes[6]
-shapeDuplicate = np.array([[0,0,0,0],[1,0,0,0],[1,0,1,0],[1,1,1,0]])
+test5Block = np.array([[0,0,0,0],[0,0,0,1],[0,1,0,0],[1,1,0,0],[1,1,1,0]])
 
 #rotating plot NOT WORKING
 #while True:
@@ -41,16 +40,16 @@ colour = [rand.random(), rand.random(), rand.random(), 0.1]
 #demo to generate mirror image
 
 #original shape
-plotShape(shapes[6], colour)
+plotShape(test5Block, colour)
 #mirror image
-plotShape(shapeDuplicate, colour)
+#plotShape(test5Block, colour)
 
 #XU +90
-plotShape(rotate4D(shapes[6], 3, 0), colour)
+plotShape(rotate4D(test5Block, 3, 0), colour)
 #XU +90 --> XY +90
-plotShape(rotate4D(rotate4D(shapes[6], 3, 0), 0, 0), colour)
+plotShape(rotate4D(rotate4D(test5Block, 3, 0), 0, 0), colour)
 #XU +90 --> XY +90 --> YU -90 (mirror image of original shape, same as shapeDuplicate)
-plotShape(rotate4D(rotate4D(rotate4D(shapes[6], 3, 0), 0, 0), 4, 1), colour)
+plotShape(rotate4D(rotate4D(rotate4D(test5Block, 3, 0), 0, 0), 4, 1), colour)
 
 
 
