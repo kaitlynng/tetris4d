@@ -3,8 +3,6 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection, Line3DCollection
 
-fig, axes = plt.subplots(2, 2, subplot_kw=dict(projection='3d'))
-fig2, ax = plt.subplots(1, 1, subplot_kw=dict(projection='3d'))
 
 def getCubeDef(corner):
     #corner type: np array
@@ -76,6 +74,8 @@ def plot3D(shape3D_dat, subplot, shape4D_colour):
     adjustAxis(X, Y, Z, subplot)
 
 def plotShape(shape4D_dat, shape4D_colour):
+    fig, axes = plt.subplots(2, 2, subplot_kw=dict(projection='3d'))
+
     #hape4D_dat type: no matrix of coordinates
 
     #plot xyz
@@ -107,6 +107,8 @@ def plotShape(shape4D_dat, shape4D_colour):
     axes[1,1].set_zlabel('U')
 
 def plotShape_slice(shape4D_dat, u_coord, shape4D_colour):
+    fig2, ax = plt.subplots(1, 1, subplot_kw=dict(projection='3d'))
+
     shape4D_slice = []
     for x in range(0,np.shape(shape4D_dat)[0]):
         if shape4D_dat[x,3] == u_coord:

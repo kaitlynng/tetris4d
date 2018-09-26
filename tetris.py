@@ -15,6 +15,15 @@ shape4 = np.array([[0,0,0,0],[0,1,0,0],[0,0,1,0],[0,1,1,0]])
 shape5 = np.array([[0,0,0,0],[0,1,0,0]])
 # testshape = np.array([[0,0,0,0]])
 
+shapes = np.array([[[0,0,0,0],[1,0,0,0],[2,0,0,0],[3,0,0,0]],
+                   [[0,0,0,0],[1,0,0,0],[2,0,0,0],[2,0,1,0]],
+                   [[0,0,0,0],[1,0,0,0],[1,0,1,0],[2,0,1,0]],
+                   [[0,0,0,0],[1,0,0,0],[1,0,1,0],[1,1,0,0]],
+                   [[0,0,0,0],[1,0,0,0],[2,0,0,0],[1,1,0,0]],
+                   [[0,0,0,0],[1,0,0,0],[0,1,0,0],[1,1,0,0]],
+                   [[0,0,0,0],[0,1,0,0],[0,1,1,0],[1,1,1,0]],
+                   [[0,0,0,0],[1,0,0,0],[1,0,1,0],[1,1,1,0]]])
+
 #rotating plot NOT WORKING
 #while True:
 #    plotShape(shape3)
@@ -25,10 +34,12 @@ shape5 = np.array([[0,0,0,0],[0,1,0,0]])
 
 colour = [rand.random(), rand.random(), rand.random(), 0.1]
 
-#plotShape(shape3, colour)
+for x in range(0,8):
+    plotShape(shapes[x,:,:], colour)
+
 #plotShape_slice(shape3, 0, colour)
 
-plotShape(rotate4D(shape3, 1, 0), colour)
-plotShape_slice(rotate4D(shape3, 1, 0), 0, colour)
+#plotShape(rotate4D(shape3, 1, 0), colour)
+#plotShape_slice(rotate4D(shape3, 1, 0), 0, colour)
 
 plt.show()
