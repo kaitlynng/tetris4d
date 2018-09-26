@@ -144,15 +144,23 @@ def rotate4D(shape, rotKey, direction):
 #    return np.dot((shape-mean), switcher.get(rotKey))+mean
 
     # move to center
-    shape_centred = np.zeros(np.shape(shape))
+    shape_rot, shape_adj = np.zeros(shape.shape), np.zeros(shape.shape)
     print("hi")
     print(shape)
+    mincoor_orig = shape[np.argmin(np.sum(shape,1))]
+    print(mincoor_orig)
     for i in range(0, np.shape(shape)[0]):
-        shape_centred[i] = shape[i]-shape[0]
-        shape_centred[i] = np.matmul([shape[i]-shape[0]], switcher.get(rotKey))
-        shape_centred[i] += shape[0]
-    print(shape_centred)
-    return shape_centred
+        shape_rot[i] = np.matmul([shape[i]-mincoor_orig], switcher.get(rotKey))
+    print(shape_rot)
+
+    mincoor_rot = shape_rot[np.argmin(np.sum(shape_rot,1))]
+    print(mincoor_rot)
+
+    for i in range(0, np.shape(shape_rot)[0]):
+        shape_adj[i] = shape_rot[i] - mincoor_rot + mincoor_orig
+
+    print(shape_adj)
+    return shape_adj
 
 '''
     shape_rotated = np.dot(switcher.get(rotKey), shape_centred)

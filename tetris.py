@@ -7,8 +7,6 @@ from mpl_toolkits import mplot3d
 from rotate4D import *
 from plotCube import *
 
-a = 0
-
 # plt.ion()
 
 #4d shapes
@@ -26,7 +24,11 @@ shape5 = np.array([[0,0,0,0],[0,1,0,0]])
 #    plt.clf()
 
 colour = [rand.random(), rand.random(), rand.random(), 0.1]
-plotShape(shape3, colour)
-plotShape_slice(rotate4D(shape3,5,0), 0, colour)
+
+#plotShape(shape3, colour)
+#plotShape_slice(shape3, 0, colour)
+
+plotShape(rotate4D(shape3, 1, 0), colour)
+plotShape_slice(rotate4D(shape3, 1, 0), 0, colour)
 
 plt.show()
