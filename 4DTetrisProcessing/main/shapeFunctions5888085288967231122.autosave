@@ -42,18 +42,14 @@ class Shape:
             popMatrix()
 
     def checkBounds(self, worldSize):
-        #list of points in world coords
-        worldcoords = [list(a+b for a,b in zip(j, self.pos_coor)) for j in self.shape_coor]
         for i in range(4):
-            min_coord = min([j[i] for j in worldcoords])
-            max_coord = max([j[i] for j in worldcoords])
+            min_coord = min([num[i] for num in self.pos_coor])
+            max_coord = max([j[i] for j in self.pos_coor])
             while min_coord < 0:
-                self.pos_coor = translate4D.translate4D(self.pos_coor, i, 1)
-                min_coord +=1
-            print worldSize[i]
-            print max_coord
-            while max_coord > worldSize[i]:
                 self.pos_coor = translate4D.translate4D(self.pos_coor, i, 0)
+                min_coord +=1
+            while max_coord >= worldSize[i]:
+                self.pos_coor = translate4D.translate4D(self.pos_coor, i, 1)
                 max_coord -=1
 
         
