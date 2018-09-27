@@ -17,6 +17,7 @@ yuz_origin = [(screen_width/8)*7-(worldSize[1]/2)*scaling, (screen_height/2)+(wo
 origins = [xyz_origin, xuz_origin, xuy_origin, yuz_origin]
 
 dropping = True
+current_u = 0
 
 #JUST FOR TEST, SORRY IF I FORGET TO REMOVE
 current_shape = [[0,0,0,0],[1,0,0,0],[2,0,0,0],[3,0,0,0]]
@@ -32,10 +33,10 @@ def draw():
     drawBackground()
     if dropping == True:
         initShape()
-    current_shape.display(origins, scaling)    
+    current_shape.displayShape(origins, scaling, current_u)    
 
 def keyPressed():
-    global current_shape
+    global current_shape, current_u
     switcher = {
         #Translations
         'q': [1,-1], 'a': [0,-1], 
@@ -52,13 +53,16 @@ def keyPressed():
         #XZ
         'i': [2, 1], 'k': [2, 0],
         #YZ
-        'o': [1, 1], 'l': [1, 0]
+        'o': [1, 1], 'l': [1, 0],
+        #adjust u coordinate
+        'z': 1, 'x': -1
     }
     if str(key) in 'qawsed':
-        current_shape.trans_shape(*switcher.get(key))
+        current_shape.transShape(*switcher.get(key))
     if str(key) in 'rftgyhujikol':
-        current_shape.rot_shape(*switcher.get(key))
-    print(current_shape)
+        current_shape.rotShape(*switcher.get(key))
+    if str(key) in 'zx':
+        current_u = current_u + switcher.get(key)
 
 def initShape():
     global current_shape, dropping
