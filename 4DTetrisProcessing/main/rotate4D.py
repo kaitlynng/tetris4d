@@ -113,7 +113,6 @@ def rotate4D(shape, rotKey, direction):
 
     return shape_adj
 
-rotate4D([[0,0,0,0],[1,0,0,0]], 0, 1)
 
 
 
