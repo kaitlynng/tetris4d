@@ -12,20 +12,10 @@ xuz_origin = [(screen_width/8)*3-(worldSize[0]/2)*scaling, (screen_height/2)+(wo
 xuy_origin = [(screen_width/8)*5-(worldSize[0]/2)*scaling, (screen_height/2)+(worldSize[2]/2)*scaling, 0]
 yuz_origin = [(screen_width/8)*7-(worldSize[1]/2)*scaling, (screen_height/2)+(worldSize[2]/2)*scaling, 0]
 
-shapes_list_coor = [[[0,0,0,0],[1,0,0,0],[2,0,0,0],[3,0,0,0]],
-                    [[0,0,0,0],[1,0,0,0],[2,0,0,0],[2,0,1,0]],
-                    [[0,0,0,0],[1,0,0,0],[1,0,1,0],[2,0,1,0]],
-                    [[0,0,0,0],[1,0,0,0],[1,0,1,0],[1,1,0,0]],
-                    [[0,0,0,0],[1,0,0,0],[2,0,0,0],[1,1,0,0]],
-                    [[0,0,0,0],[1,0,0,0],[0,1,0,0],[1,1,0,0]],
-                    [[0,0,0,0],[0,1,0,0],[0,1,1,0],[1,1,1,0]]]
-shapes_list_color = [[30, 30, 30], [40, 40, 40], [50, 30, 100],
-                      [200, 25, 40], [10, 40, 120], [40, 40, 150], [20, 10, 40]]
-
 dropping = True
 
 #JUST FOR TEST, SORRY IF I FORGET TO REMOVE
-shape = [[0,0,0,0],[1,0,0,0],[2,0,0,0],[3,0,0,0]]
+current_shape = [[0,0,0,0],[1,0,0,0],[2,0,0,0],[3,0,0,0]]
 
 def setup():
     size(screen_width, screen_height, P3D)
@@ -65,12 +55,17 @@ def keyPressed():
         'o': rotate4D.rotate4D(shape, 1, 1),
         'l': rotate4D.rotate4D(shape, 1, 0)
     }
-    global shape
+    global current_shape
     shape = switcher.get(key)
     print(shape)
 
 def p():
     return
+
+def initShape():
+    pass
+    
+
 
 def drawBackground():
     #xzy
@@ -89,7 +84,7 @@ def initGrid(origin, grid_size):
     noFill()
     
     pushMatrix()
-    translate(origin[0], origin[1], origin[2])
+    translate(*origin)
     
     #draw hor-ver plane
     beginShape()
@@ -120,3 +115,4 @@ def initGrid(origin, grid_size):
     popMatrix()
 
     popMatrix()
+    
