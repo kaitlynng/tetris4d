@@ -1,5 +1,6 @@
 import random
 import rotate4D
+import translate4D
 
 shapes_list_coor = [[[0,0,0,0],[1,0,0,0],[2,0,0,0],[3,0,0,0]],
                     [[0,0,0,0],[1,0,0,0],[2,0,0,0],[2,0,1,0]],
@@ -21,18 +22,18 @@ class Shape:
         self.shape_coor = rotate4D.rotate4D(self.shape_coor, plane, direction)
     
     def trans_shape(self, rotKey, direction):
-        self.pos_coor = translate4D(self.shape_coor, rotKey, direction)
+        self.pos_coor = translate4D.translate4D(self.pos_coor, rotKey, direction)
+        print(self.pos_coor)
     
-    def display(self, xyz_origin, xuz_origin, xuy_origin, yuz_origin, scaling):
+    def display(self, origins, scaling):
         #display in xyz grid
-        origins = [xyz_origin, xuz_origin, xuy_origin, yuz_origin]
         axes = [[0,1,2],[0,3,2],[0,3,1],[1,3,2]]
         fill(*self.shape_color)
         stroke(255)
-        for iter in len(origins):
+        for iter in range(len(origins)):
             pushMatrix()
             translate(*origins[iter])
-            translate(*[pos_coor[i]*scaling for i in axes[iter]])
+            translate(*[self.pos_coor[i]*scaling for i in axes[iter]])
             for cube in self.shape_coor:
                 pushMatrix()
                 translate(*[cube[i]*scaling for i in axes[iter]])

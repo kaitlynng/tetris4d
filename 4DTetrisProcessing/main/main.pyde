@@ -14,6 +14,7 @@ xyz_origin = [(screen_width/8)-(worldSize[0]/2)*scaling, (screen_height/2)+(worl
 xuz_origin = [(screen_width/8)*3-(worldSize[0]/2)*scaling, (screen_height/2)+(worldSize[2]/2)*scaling, 0]
 xuy_origin = [(screen_width/8)*5-(worldSize[0]/2)*scaling, (screen_height/2)+(worldSize[2]/2)*scaling, 0]
 yuz_origin = [(screen_width/8)*7-(worldSize[1]/2)*scaling, (screen_height/2)+(worldSize[2]/2)*scaling, 0]
+origins = [xyz_origin, xuz_origin, xuy_origin, yuz_origin]
 
 dropping = True
 
@@ -29,17 +30,17 @@ def draw():
     background(0)
     camera(width/2, 0, (height/2)/tan(PI/6), width/2, height/2, 0, 0, 1, 0)
     drawBackground()
-    if dropping:
+    if dropping == True:
         initShape()
-    current_shape.display()    
+    current_shape.display(origins, scaling)    
 
 def keyPressed():
     global current_shape
     switcher = {
         #Translations
-        'q': [0,1], 'a': [0,0], 
-        'w': [1,1], 's': [1,0], 
-        'e': [2,1], 'd': [2,0],
+        'q': [0,-1], 'a': [0,1], 
+        'w': [1,-1], 's': [1,1], 
+        'e': [2,-1], 'd': [2,1],
         #XU
         'r': [3, 1], 'f': [3, 0],
         #YU
@@ -53,15 +54,15 @@ def keyPressed():
         #YZ
         'o': [1, 1], 'l': [1, 0]
     }
-    if key in 'qawsed':
+    if str(key) in 'qawsed':
         current_shape.trans_shape(*switcher.get(key))
-    if key in 'rftgyhujikol':
-        current_shape.rot_shape(switcher.get(key))
+    if str(key) in 'rftgyhujikol':
+        current_shape.rot_shape(*switcher.get(key))
     print(current_shape)
 
 def initShape():
-    global current_shape
-    current_shape = Shape()
+    global current_shape, dropping
+    current_shape = shapeFunctions.Shape([0, 0, 0, 0])
     dropping = False
 
 def drawBackground():
