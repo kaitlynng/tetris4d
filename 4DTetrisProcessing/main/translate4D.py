@@ -1,4 +1,3 @@
-
 def transX(a):
     if a == 0:
         return [1, 0, 0, 0]
@@ -22,8 +21,6 @@ def transU(a):
         return [0, 0, 0, 1]
     else:
         return [0, 0, 0, -1]
-
-
 
 def translate4D(shape, transKey, direction):
     # direction: +1unit: 0, -1unit: 1

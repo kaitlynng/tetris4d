@@ -1,6 +1,7 @@
 from matmul import *
 from rotate4D import *
 import translate4D
+import shapeFunctions
 
 worldSize = [5, 5, 5, 10] #x, y, z, u
 screen_width = 1800
@@ -28,42 +29,40 @@ def draw():
     background(0)
     camera(width/2, 0, (height/2)/tan(PI/6), width/2, height/2, 0, 0, 1, 0)
     drawBackground()
+    if dropping:
+        initShape()
+    current_shape.display()    
 
 def keyPressed():
     global current_shape
     switcher = {
         #Translations
-        'q': translate4D.translate4D(current_shape,0,1),
-        'a': translate4D.translate4D(current_shape,0,0),
-        'w': translate4D.translate4D(current_shape,1,1),
-        's': translate4D.translate4D(current_shape,1,0),
-        'e': translate4D.translate4D(current_shape,2,1),
-        'd': translate4D.translate4D(current_shape,2,0),
+        'q': [0,1], 'a': [0,0], 
+        'w': [1,1], 's': [1,0], 
+        'e': [2,1], 'd': [2,0],
         #XU
-        'r': rotate4D(current_shape, 3, 1),
-        'f': rotate4D(current_shape, 3, 0),
+        'r': [3, 1], 'f': [3, 0],
         #YU
-        't': rotate4D(current_shape, 4, 1),
-        'g': rotate4D(current_shape, 4, 0),
+        't': [4, 1], 'g': [4, 0],
         #ZU
-        'y': rotate4D(current_shape, 5, 1),
-        'h': rotate4D(current_shape, 5, 0),
+        'y': [5, 1], 'h': [5, 0],
         #XY
-        'u': rotate4D(current_shape, 0, 1),
-        'j': rotate4D(current_shape, 0, 0),
+        'u': [0, 1], 'j': [0, 0],
         #XZ
-        'i': rotate4D(current_shape, 2, 1),
-        'k': rotate4D(current_shape, 2, 0),
+        'i': [2, 1], 'k': [2, 0],
         #YZ
-        'o': rotate4D(current_shape, 1, 1),
-        'l': rotate4D(current_shape, 1, 0)
+        'o': [1, 1], 'l': [1, 0]
     }
-
-    current_shape = switcher.get(key)
+    if key in 'qawsed':
+        current_shape.trans_shape(*switcher.get(key))
+    if key in 'rftgyhujikol':
+        current_shape.rot_shape(switcher.get(key))
     print(current_shape)
 
-def p():
-    return
+def initShape():
+    global current_shape
+    current_shape = Shape()
+    dropping = False
 
 def drawBackground():
     #xzy
