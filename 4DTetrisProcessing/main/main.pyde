@@ -1,9 +1,9 @@
-<<<<<<< HEAD
+
 import rotate4D
-=======
+import translate4D
+
 from matmul import *
 from rotate4D import *
->>>>>>> f8fdf7f8bd1e7c3e4d14b499376a43916ac152fc
 
 worldSize = [5, 5, 5, 10] #x, y, z, u
 screen_width = 1500
@@ -34,37 +34,34 @@ def draw():
 def keyPressed():
     switcher = {
         #Translations
-        'q': p,
-        'a': p,
-        'w': p,
-        's': p,
-        'e': p,
-        'd': p,
+        'q': translate4D.translate4D(shape,0,1),
+        'a': translate4D.translate4D(shape,0,0),
+        'w': translate4D.translate4D(shape,1,1),
+        's': translate4D.translate4D(shape,1,0),
+        'e': translate4D.translate4D(shape,2,1),
+        'd': translate4D.translate4D(shape,2,0),
         #XU
-        'r': rotate4D.rotate4D(shape, 3, 0),
-        'f': rotate4D.rotate4D(shape, 3, 0),
+        'r': rotate4D(shape, 3, 1),
+        'f': rotate4D(shape, 3, 0),
         #YU
-        't': rotate4D.rotate4D(shape, 4, 0),
-        'g': rotate4D.rotate4D(shape, 4, 0),
+        't': rotate4D(shape, 4, 1),
+        'g': rotate4D(shape, 4, 0),
         #ZU
-        'y': rotate4D.rotate4D(shape, 5, 1),
-        'h': rotate4D.rotate4D(shape, 5, 0),
+        'y': rotate4D(shape, 5, 1),
+        'h': rotate4D(shape, 5, 0),
         #XY
-        'u': rotate4D.rotate4D(shape, 0, 1),
-        'j': rotate4D.rotate4D(shape, 0, 0),
+        'u': rotate4D(shape, 0, 1),
+        'j': rotate4D(shape, 0, 0),
         #XZ
-        'i': rotate4D.rotate4D(shape, 2, 1),
-        'k': rotate4D.rotate4D(shape, 2, 0),
+        'i': rotate4D(shape, 2, 1),
+        'k': rotate4D(shape, 2, 0),
         #YZ
-        'o': rotate4D.rotate4D(shape, 1, 1),
-        'l': rotate4D.rotate4D(shape, 1, 0)
+        'o': rotate4D(shape, 1, 1),
+        'l': rotate4D(shape, 1, 0)
     }
     global shape
-    shape = switcher.get(key)
+    shape = switcher.get(key, shape)
     print(shape)
-
-def p():
-    return
 
 def drawBackground():
     #xzy
