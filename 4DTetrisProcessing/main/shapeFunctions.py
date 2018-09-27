@@ -51,7 +51,6 @@ class Shape:
         display_func(pos_coor_edit, xyz_cubes, axes[0], origins[0], scaling)
         
         for iter in range(1, len(axes)):
-            print(iter)
             display_func(self.pos_coor, self.shape_coor, axes[iter], origins[iter], scaling)
 
     def checkBounds(self, worldSize):
@@ -60,11 +59,9 @@ class Shape:
         for i in range(4):
             min_coord = min([j[i] for j in worldcoords])
             max_coord = max([j[i] for j in worldcoords])
+            while max_coord >= worldSize[i]:
+                self.pos_coor = translate4D.translate4D(self.pos_coor, i, -1)
+                max_coord -=1
             while min_coord < 0:
                 self.pos_coor = translate4D.translate4D(self.pos_coor, i, 1)
                 min_coord +=1
-            print worldSize[i]
-            print max_coord
-            while max_coord > worldSize[i]:
-                self.pos_coor = translate4D.translate4D(self.pos_coor, i, 0)
-                max_coord -=1
