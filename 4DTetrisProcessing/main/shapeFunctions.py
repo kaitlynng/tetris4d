@@ -34,7 +34,6 @@ class Shape:
     
     def transShape(self, rotKey, direction):
         self.pos_coor = translate4D.translate4D(self.pos_coor, rotKey, direction)
-        print(self.pos_coor)
     
     def displayShape(self, origins, scaling, current_u):
         axes = [[0,1,2],[0,3,2],[0,3,1],[1,3,2]]
@@ -45,33 +44,10 @@ class Shape:
         for coor in self.shape_coor:
             if coor[3]-self.shape_coor[0][3]+self.pos_coor[3] == current_u:
                 xyz_cubes += [coor]
-        display_func(self.pos_coor, xyz_cubes, axes[0], origins[0], scaling)
-        
-        #display in xuz grid
-        display_func(self.pos_coor, self.shape_coor, axes[1], origins[1], scaling)
-        
-        #display in xuy grid
         pos_coor_edit = []
         pos_coor_edit += self.pos_coor
         pos_coor_edit[1] = -pos_coor_edit[1]
-        display_func(pos_coor_edit, self.shape_coor, axes[2], origins[2], scaling)
+        display_func(pos_coor_edit, xyz_cubes, axes[0], origins[0], scaling)
         
-        #display in yuz grid
-        display_func(pos_coor_edit, self.shape_coor, axes[3], origins[3], scaling)
-        
-        ''' 
-        for iter in range(1, len(origins)):
-            display_func([self.pos_coor[i] for i in axes[iter]
-            
-            pushMatrix()
-            translate(*origins[iter])
-            translate(*[self.pos_coor[i]*scaling for i in axes[iter]])
-            for cube in self.shape_coor:
-                pushMatrix()
-                translate(*[cube[i]*scaling for i in axes[iter]])
-                box(scaling)
-                popMatrix()
-            popMatrix()
-        '''
-    
-    
+        for iter in range(1, len(axes)):
+            display_func(self.pos_coor, self.shape_coor, axes[iter], origins[iter], scaling)    
