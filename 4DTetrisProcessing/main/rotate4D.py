@@ -97,32 +97,28 @@ def rotate4D(shape, rotKey, direction):
 
 
 # move to center
-    shape_rot = [[0 for col in range(len(shape[0]))] for row in range(len(shape))]
-    shape_adj = [[0 for col in range(len(shape[0]))] for row in range(len(shape))]
     row_sums = [sum(row) for row in shape]
     mincoor_orig = shape[row_sums.index(min(row_sums))]
 
+    '''
     for i in range(0,len(shape)) :
         shape_rot[i] = matmul.matmul(switcher.get(rotKey),[shape[i][j]-mincoor_orig[j] for j in range(len(shape[i]))])
+    '''
+
+    #shift to zero
+    shape_rot = [list(a-b for a,b in zip(coor, mincoor_orig)) for coor in shape]
+    #matrix multiplication with transposing shape_rot
+    shape_rot = matmul.matmul(switcher.get(rotKey), list(zip(*shape_rot)))
+    #transpose rotated shape back
+    shape_rot = list(zip(*shape_rot))
 
     row_sums_rot = [sum(row) for row in shape_rot]
     mincoor_rot = shape_rot[row_sums_rot.index(min(row_sums_rot))]
 
+    '''
     for i in range(0, len(shape_rot)):
         shape_adj[i] = [shape_rot[i][j] - mincoor_rot[j] + mincoor_orig[j] for j in range(len(shape_rot[i]))]
-
+    '''
+    #shift again
+    shape_adj = [list(a-b for a,b in zip(coor, mincoor_rot)) for coor in shape_rot]
     return shape_adj
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -150,11 +150,10 @@ def rotate4D(shape, rotKey, direction):
     mincoor_orig = shape[np.argmin(np.sum(shape,1))]
     print(mincoor_orig)
     for i in range(0, np.shape(shape)[0]):
-        shape_rot[i] = np.matmul([shape[i]-mincoor_orig], switcher.get(rotKey))
-    print(shape_rot)
+        shape_rot[i] = shape[i]-mincoor_orig
+    shape_rot = np.transpose(np.matmul(switcher.get(rotKey), np.transpose(shape_rot)))
 
     mincoor_rot = shape_rot[np.argmin(np.sum(shape_rot,1))]
-    print(mincoor_rot)
 
     for i in range(0, np.shape(shape_rot)[0]):
         shape_adj[i] = shape_rot[i] - mincoor_rot + mincoor_orig

@@ -45,11 +45,11 @@ plotShape(test5Block, colour)
 #plotShape(test5Block, colour)
 
 #XU +90
-plotShape(rotate4D(test5Block, 3, 0), colour)
+plotShape(rotate4D(test5Block, 0, 0), colour)
+print("lols")
+print(rotate4D(test5Block, 0, 0))
 #XU +90 --> XY +90
-plotShape(rotate4D(rotate4D(test5Block, 3, 0), 0, 0), colour)
 #XU +90 --> XY +90 --> YU -90 (mirror image of original shape, same as shapeDuplicate)
-plotShape(rotate4D(rotate4D(rotate4D(test5Block, 3, 0), 0, 0), 4, 1), colour)
 
 
 
