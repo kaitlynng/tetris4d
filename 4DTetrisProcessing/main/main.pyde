@@ -1,4 +1,6 @@
-import rotate4D
+from matmul import *
+from rotate4D import *
+import translate4D
 
 worldSize = [5, 5, 5, 10] #x, y, z, u
 screen_width = 1800
@@ -28,44 +30,40 @@ def draw():
     drawBackground()
 
 def keyPressed():
+    global current_shape
     switcher = {
         #Translations
-        'q': p,
-        'a': p,
-        'w': p,
-        's': p,
-        'e': p,
-        'd': p,
+        'q': translate4D.translate4D(current_shape,0,1),
+        'a': translate4D.translate4D(current_shape,0,0),
+        'w': translate4D.translate4D(current_shape,1,1),
+        's': translate4D.translate4D(current_shape,1,0),
+        'e': translate4D.translate4D(current_shape,2,1),
+        'd': translate4D.translate4D(current_shape,2,0),
         #XU
-        'r': rotate4D.rotate4D(shape, 3, 0),
-        'f': rotate4D.rotate4D(shape, 3, 0),
+        'r': rotate4D(current_shape, 3, 1),
+        'f': rotate4D(current_shape, 3, 0),
         #YU
-        't': rotate4D.rotate4D(shape, 4, 0),
-        'g': rotate4D.rotate4D(shape, 4, 0),
+        't': rotate4D(current_shape, 4, 1),
+        'g': rotate4D(current_shape, 4, 0),
         #ZU
-        'y': rotate4D.rotate4D(shape, 5, 1),
-        'h': rotate4D.rotate4D(shape, 5, 0),
+        'y': rotate4D(current_shape, 5, 1),
+        'h': rotate4D(current_shape, 5, 0),
         #XY
-        'u': rotate4D.rotate4D(shape, 0, 1),
-        'j': rotate4D.rotate4D(shape, 0, 0),
+        'u': rotate4D(current_shape, 0, 1),
+        'j': rotate4D(current_shape, 0, 0),
         #XZ
-        'i': rotate4D.rotate4D(shape, 2, 1),
-        'k': rotate4D.rotate4D(shape, 2, 0),
+        'i': rotate4D(current_shape, 2, 1),
+        'k': rotate4D(current_shape, 2, 0),
         #YZ
-        'o': rotate4D.rotate4D(shape, 1, 1),
-        'l': rotate4D.rotate4D(shape, 1, 0)
+        'o': rotate4D(current_shape, 1, 1),
+        'l': rotate4D(current_shape, 1, 0)
     }
-    global current_shape
-    shape = switcher.get(key)
-    print(shape)
+
+    current_shape = switcher.get(key)
+    print(current_shape)
 
 def p():
     return
-
-def initShape():
-    pass
-    
-
 
 def drawBackground():
     #xzy
