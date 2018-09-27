@@ -1,5 +1,4 @@
-from matmul import *
-from rotate4D import *
+import rotate4D
 
 worldSize = [5, 5, 5, 10] #x, y, z, u
 screen_width = 1800
@@ -24,7 +23,9 @@ shapes_list_color = [[30, 30, 30], [40, 40, 40], [50, 30, 100],
                       [200, 25, 40], [10, 40, 120], [40, 40, 150], [20, 10, 40]]
 
 dropping = True
-current_shape
+
+#JUST FOR TEST, SORRY IF I FORGET TO REMOVE
+shape = [[0,0,0,0],[1,0,0,0],[2,0,0,0],[3,0,0,0]]
 
 def setup():
     size(screen_width, screen_height, P3D)
@@ -35,9 +36,42 @@ def draw():
     background(0)
     camera(width/2, 0, (height/2)/tan(PI/6), width/2, height/2, 0, 0, 1, 0)
     drawBackground()
-    if dropping:
-        initShape()
-    
+
+def keyPressed():
+    switcher = {
+        #Translations
+        'q': p,
+        'a': p,
+        'w': p,
+        's': p,
+        'e': p,
+        'd': p,
+        #XU
+        'r': rotate4D.rotate4D(shape, 3, 0),
+        'f': rotate4D.rotate4D(shape, 3, 0),
+        #YU
+        't': rotate4D.rotate4D(shape, 4, 0),
+        'g': rotate4D.rotate4D(shape, 4, 0),
+        #ZU
+        'y': rotate4D.rotate4D(shape, 5, 1),
+        'h': rotate4D.rotate4D(shape, 5, 0),
+        #XY
+        'u': rotate4D.rotate4D(shape, 0, 1),
+        'j': rotate4D.rotate4D(shape, 0, 0),
+        #XZ
+        'i': rotate4D.rotate4D(shape, 2, 1),
+        'k': rotate4D.rotate4D(shape, 2, 0),
+        #YZ
+        'o': rotate4D.rotate4D(shape, 1, 1),
+        'l': rotate4D.rotate4D(shape, 1, 0)
+    }
+    global shape
+    shape = switcher.get(key)
+    print(shape)
+
+def p():
+    return
+
 def drawBackground():
     #xzy
     initGrid(xyz_origin, [worldSize[i] for i in [0, 1, 2]])
