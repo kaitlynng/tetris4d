@@ -39,7 +39,7 @@ class Shape:
         axes = [[0,1,2],[0,3,2],[0,3,1],[1,3,2]]
         fill(*self.shape_color)
         stroke(255)
-<<<<<<< HEAD
+
         for iter in range(len(origins)):
             pushMatrix()
             translate(*origins[iter])
@@ -51,22 +51,6 @@ class Shape:
                 popMatrix()
             popMatrix()
 
-    def checkBounds(self, worldSize):
-        #list of points in world coords
-        worldcoords = [list(a+b for a,b in zip(j, self.pos_coor)) for j in self.shape_coor]
-        for i in range(4):
-            min_coord = min([j[i] for j in worldcoords])
-            max_coord = max([j[i] for j in worldcoords])
-            while min_coord < 0:
-                self.pos_coor = translate4D.translate4D(self.pos_coor, i, 1)
-                min_coord +=1
-            print worldSize[i]
-            print max_coord
-            while max_coord > worldSize[i]:
-                self.pos_coor = translate4D.translate4D(self.pos_coor, i, 0)
-                max_coord -=1
-
-=======
         #display in xyz grid
         xyz_cubes = []
         for coor in self.shape_coor:
@@ -76,7 +60,22 @@ class Shape:
         pos_coor_edit += self.pos_coor
         pos_coor_edit[1] = -pos_coor_edit[1]
         display_func(pos_coor_edit, xyz_cubes, axes[0], origins[0], scaling)
->>>>>>> a366d58250faebdc2422f49fc1187abe3da52d5a
         
         for iter in range(1, len(axes)):
-            display_func(self.pos_coor, self.shape_coor, axes[iter], origins[iter], scaling)    
+            display_func(self.pos_coor, self.shape_coor, axes[iter], origins[iter], scaling)
+
+def checkBounds(self, worldSize):
+    #list of points in world coords
+    worldcoords = [list(a+b for a,b in zip(j, self.pos_coor)) for j in self.shape_coor]
+    for i in range(4):
+        min_coord = min([j[i] for j in worldcoords])
+        max_coord = max([j[i] for j in worldcoords])
+        while min_coord < 0:
+            self.pos_coor = translate4D.translate4D(self.pos_coor, i, 1)
+            min_coord +=1
+        print worldSize[i]
+        print max_coord
+        while max_coord > worldSize[i]:
+            self.pos_coor = translate4D.translate4D(self.pos_coor, i, 0)
+            max_coord -=1
+
