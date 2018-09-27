@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 import rotate4D
+=======
+from matmul import *
+from rotate4D import *
+>>>>>>> f8fdf7f8bd1e7c3e4d14b499376a43916ac152fc
 
 worldSize = [5, 5, 5, 10] #x, y, z, u
 screen_width = 1500
