@@ -40,17 +40,6 @@ class Shape:
         fill(*self.shape_color)
         stroke(255)
 
-        for iter in range(len(origins)):
-            pushMatrix()
-            translate(*origins[iter])
-            translate(*[self.pos_coor[i]*scaling for i in axes[iter]])
-            for cube in self.shape_coor:
-                pushMatrix()
-                translate(*[cube[i]*scaling for i in axes[iter]])
-                box(scaling)
-                popMatrix()
-            popMatrix()
-
         #display in xyz grid
         xyz_cubes = []
         for coor in self.shape_coor:
