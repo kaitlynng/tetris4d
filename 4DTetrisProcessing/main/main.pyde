@@ -1,3 +1,6 @@
+from matmul import *
+from rotate4D import *
+
 worldSize = [5, 5, 5, 10] #x, y, z, u
 screen_width = 1500
 screen_height = 1000
