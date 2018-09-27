@@ -1,3 +1,5 @@
+import rotate4D
+
 worldSize = [5, 5, 5, 10] #x, y, z, u
 screen_width = 1500
 screen_height = 1000
@@ -9,6 +11,9 @@ xuz_origin = [(screen_width/8)*3-(worldSize[0]/2)*scaling, (screen_height/2)+(wo
 xuy_origin = [(screen_width/8)*5-(worldSize[0]/2)*scaling, (screen_height/2)+(worldSize[2]/2)*scaling, 0]
 yuz_origin = [(screen_width/8)*7-(worldSize[1]/2)*scaling, (screen_height/2)+(worldSize[2]/2)*scaling, 0]
 
+#JUST FOR TEST, SORRY IF I FORGET TO REMOVE
+shape = [[0,0,0,0],[1,0,0,0],[2,0,0,0],[3,0,0,0]]
+
 def setup():
     size(screen_width, screen_height, P3D)
     translate(0, 0, front_z)
@@ -18,6 +23,43 @@ def draw():
     background(0)
     camera(width/2, 0, (height/2)/tan(PI/6), width/2, height/2, 0, 0, 1, 0)
     drawBackground()
+
+    pass
+
+def keyPressed():
+    switcher = {
+        #Translations
+        'q': p,
+        'a': p,
+        'w': p,
+        's': p,
+        'e': p,
+        'd': p,
+        #XU
+        'r': rotate4D.rotate4D(shape, 3, 0),
+        'f': rotate4D.rotate4D(shape, 3, 0),
+        #YU
+        't': rotate4D.rotate4D(shape, 4, 0),
+        'g': rotate4D.rotate4D(shape, 4, 0),
+        #ZU
+        'y': rotate4D.rotate4D(shape, 5, 1),
+        'h': rotate4D.rotate4D(shape, 5, 0),
+        #XY
+        'u': rotate4D.rotate4D(shape, 0, 1),
+        'j': rotate4D.rotate4D(shape, 0, 0),
+        #XZ
+        'i': rotate4D.rotate4D(shape, 2, 1),
+        'k': rotate4D.rotate4D(shape, 2, 0),
+        #YZ
+        'o': rotate4D.rotate4D(shape, 1, 1),
+        'l': rotate4D.rotate4D(shape, 1, 0)
+    }
+    global shape
+    shape = switcher.get(key)
+    print(shape)
+
+def p():
+    return
 
 def drawBackground():
     #xzy
