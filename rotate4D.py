@@ -42,7 +42,7 @@ def rotZU(a):
     [1,0,0,0],
     [0,1,0,0],
     [0, 0, np.cos(a), -np.sin(a)],
-    [0,np.sin(a), 0, np.cos(a)]])
+    [0, 0, np.sin(a), np.cos(a)]])
 '''
 
 def rotXY(a):
@@ -121,13 +121,13 @@ def rotZU(a):
             [1, 0, 0, 0],
             [0, 1, 0, 0],
             [0, 0, 0, -1],
-            [0, 1, 0, 0]])
+            [0, 0, 1, 0]])
     else:
         return np.array([
             [1, 0, 0, 0],
             [0, 1, 0, 0],
             [0, 0, 0, 1],
-            [0, -1, 0, 1]])
+            [0, 0, -1, 0]])
 
 def rotate4D(shape, rotKey, direction):
     # direction: +90deg: 0, -90deg: 1

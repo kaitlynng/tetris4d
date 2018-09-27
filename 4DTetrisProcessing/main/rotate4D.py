@@ -76,13 +76,13 @@ def rotZU(a):
             [1, 0, 0, 0],
             [0, 1, 0, 0],
             [0, 0, 0, -1],
-            [0, 1, 0, 0]]
+            [0, 0, 1, 0]]
     else:
         return [
             [1, 0, 0, 0],
             [0, 1, 0, 0],
             [0, 0, 0, 1],
-            [0, -1, 0, 1]]
+            [0, 0, -1, 0]]
 
 def rotate4D(shape, rotKey, direction):
     # direction: +90deg: 0, -90deg: 1
