@@ -2,15 +2,29 @@ from matmul import *
 from rotate4D import *
 
 worldSize = [5, 5, 5, 10] #x, y, z, u
-screen_width = 1500
+screen_width = 1800
 screen_height = 1000
 scaling = 50
 front_z = -500
+
 #axes defined by hor, ver, dep
 xyz_origin = [(screen_width/8)-(worldSize[0]/2)*scaling, (screen_height/2)+(worldSize[1]/2)*scaling, 0]
 xuz_origin = [(screen_width/8)*3-(worldSize[0]/2)*scaling, (screen_height/2)+(worldSize[2]/2)*scaling, 0]
 xuy_origin = [(screen_width/8)*5-(worldSize[0]/2)*scaling, (screen_height/2)+(worldSize[2]/2)*scaling, 0]
 yuz_origin = [(screen_width/8)*7-(worldSize[1]/2)*scaling, (screen_height/2)+(worldSize[2]/2)*scaling, 0]
+
+shapes_list_coor = [[[0,0,0,0],[1,0,0,0],[2,0,0,0],[3,0,0,0]],
+                    [[0,0,0,0],[1,0,0,0],[2,0,0,0],[2,0,1,0]],
+                    [[0,0,0,0],[1,0,0,0],[1,0,1,0],[2,0,1,0]],
+                    [[0,0,0,0],[1,0,0,0],[1,0,1,0],[1,1,0,0]],
+                    [[0,0,0,0],[1,0,0,0],[2,0,0,0],[1,1,0,0]],
+                    [[0,0,0,0],[1,0,0,0],[0,1,0,0],[1,1,0,0]],
+                    [[0,0,0,0],[0,1,0,0],[0,1,1,0],[1,1,1,0]]]
+shapes_list_color = [[30, 30, 30], [40, 40, 40], [50, 30, 100],
+                      [200, 25, 40], [10, 40, 120], [40, 40, 150], [20, 10, 40]]
+
+dropping = True
+current_shape
 
 def setup():
     size(screen_width, screen_height, P3D)
@@ -21,7 +35,9 @@ def draw():
     background(0)
     camera(width/2, 0, (height/2)/tan(PI/6), width/2, height/2, 0, 0, 1, 0)
     drawBackground()
-
+    if dropping:
+        initShape()
+    
 def drawBackground():
     #xzy
     initGrid(xyz_origin, [worldSize[i] for i in [0, 1, 2]])
@@ -70,5 +86,3 @@ def initGrid(origin, grid_size):
     popMatrix()
 
     popMatrix()
-    
-            
