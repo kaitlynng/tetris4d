@@ -16,9 +16,9 @@ axes_name_color = 255
 text_buffer = 20
 
 #axes defined by hor, ver, dep
-xyz1_origin = [(screen_width/8)-(world_size[0]/2)*scaling, (screen_height*17/24)+(world_size[1]/2)*scaling, 0]
-xyz2_origin = [(screen_width/8)-(world_size[0]/2)*scaling, (screen_height*12/24)+(world_size[1]/2)*scaling, 0]
-xyz3_origin = [(screen_width/8)-(world_size[0]/2)*scaling, (screen_height*7/24)+(world_size[1]/2)*scaling, 0]
+xyz1_origin = [(screen_width/8)-(world_size[0]/2)*scaling, (screen_height*20/24)+(world_size[1]/2)*scaling, 0]
+xyz2_origin = [(screen_width/8)-(world_size[0]/2)*scaling, (screen_height*13/24)+(world_size[1]/2)*scaling, 0]
+xyz3_origin = [(screen_width/8)-(world_size[0]/2)*scaling, (screen_height*6/24)+(world_size[1]/2)*scaling, 0]
 xuz_origin = [(screen_width/8)*3-(world_size[0]/2)*scaling, (screen_height*3/4)+(world_size[2]/2)*scaling, 0]
 xuy_origin = [(screen_width/8)*5-(world_size[0]/2)*scaling, (screen_height*3/4)+(world_size[2]/2)*scaling, 0]
 yuz_origin = [(screen_width/8)*7-(world_size[1]/2)*scaling, (screen_height*3/4)+(world_size[2]/2)*scaling, 0]
@@ -76,9 +76,9 @@ def keyPressed():
         'z': -1, 'x': 1
     }
     if str(key) in 'qawsed':
-        current_shape.transShape(*switcher.get(key), bottom_layers=bottom_layers)
+        current_shape.transShape(*switcher.get(key))
     if str(key) in 'rftgyhujikol':
-        current_shape.rotShape(*switcher.get(key), bottom_layers=bottom_layers)
+        current_shape.rotShape(*switcher.get(key))
     if str(key) in 'zx':
         current_u = [value + switcher.get(key) for value in current_u]
 

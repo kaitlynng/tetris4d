@@ -2,6 +2,7 @@ import random
 import rotate4D
 import translate4D
 import time
+import copy
 
 shapes_list_coor = [[[0,0,0,0],[1,0,0,0],[2,0,0,0],[3,0,0,0]],
                     [[0,0,0,0],[1,0,0,0],[2,0,0,0],[2,0,1,0]],
@@ -41,16 +42,24 @@ class Shape:
         self.pos_coor = pos_coor #in world coordinates
         self.prev_time = 0
         self.time_delta = time_delta
-        
-    def rotShape(self, plane, direction):
-        self.shape_coor = rotate4D.rotate4D(self.shape_coor, plane, direction)
+
+    def rotShape(self, plane, direction, bottom_layers):
+        temp_coor = rotate4D.rotate4D(self.shape_coor, plane, direction)
+        worldcoords = tuple((tuple(a+b for a,b in zip(j, self.pos_coor)) for j in temp_coor))
+        for coor in worldcoords:
+            if coor in bottom_layers:
+                return
+        self.shape_coor = temp_coor[:]
     
-    def transShape(self, rotKey, direction):
-        self.pos_coor = translate4D.translate4D(self.pos_coor, rotKey, direction)
-    
+    def transShape(self, rotKey, direction, bottom_layers):
+        temp_coor = translate4D.translate4D(self.pos_coor, rotKey, direction)
+        worldcoords = tuple((tuple(a+b for a,b in zip(j, temp_coor)) for j in self.shape_coor))
+        for coor in worldcoords:
+            if coor in bottom_layers:
+                return
+        self.pos_coor = temp_coor[:]
     
     def displayShape(self, origins, scaling, current_u):
-        global block_stroke
         axes = [[0,1,2],[0,3,2],[0,3,1],[1,3,2]]
         fill(*self.shape_color)
         stroke(block_stroke)
@@ -99,7 +108,7 @@ class Shape:
                 for coor in worldcoords:
                     layer_num_list[coor[3]] += 1
             else:
-                self.transShape(3,-1)
+                self.transShape(3, -1, bottom_layers)
                 self.prev_time = time.time()
 
         return dropping
