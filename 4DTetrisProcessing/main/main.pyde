@@ -3,6 +3,8 @@ from rotate4D import *
 import translate4D
 import shapeFunctions
 import bottomlayers
+import random
+import time
 
 world_size = [5, 5, 5, 10] #x, y, z, u
 screen_width = 1400
@@ -24,10 +26,13 @@ xuy_origin = [(screen_width/8)*5-(world_size[0]/2)*scaling, (screen_height*3/4)+
 yuz_origin = [(screen_width/8)*7-(world_size[1]/2)*scaling, (screen_height*3/4)+(world_size[2]/2)*scaling, 0]
 origins = [xyz1_origin, xyz2_origin, xyz3_origin, xuz_origin, xuy_origin, yuz_origin]
 axes_names = [['X', 'Y', 'Z'], ['X', 'U', 'Z'], ['X', 'U', 'Y'], ['Y', 'U', 'Z']]
-time_delta = 2
+time_delta = 1
 
 dropping = True
 current_u = [0, 1, 2]
+gameplay = True
+endgame_coor = [random.random()*screen_width, random.random()*screen_height, random.random()*500]
+endgame_prevtime = 0
 
 bottom_layers = []
 bottom_layers_colors = []
@@ -39,19 +44,34 @@ def setup():
     draw()
 
 def draw():
-    global dropping
-    background(0)
-    camera(screen_width/2, height*5/6, (height/2)/tan(PI/6)*1.1, width/2, height*2/3, 0, 0, 1, 0)
-    rotateX(-PI/5)
-    drawBackground()
-    bottomlayers.displayBottomLayers(bottom_layers, bottom_layers_colors, origins, scaling, current_u)
-    if dropping:
-        initShape()
-    current_shape.checkBounds(world_size)
-    bottomlayers.checkClear(layer_num_list, world_size, bottom_layers, bottom_layers_colors)
-    current_shape.displayShape(origins, scaling, current_u)
-    dropping = current_shape.checkStop(bottom_layers, bottom_layers_colors, dropping, layer_num_list)
-    
+    global dropping, endgame_coor, endgame_prevtime
+    if gameplay:
+        background(0)
+        camera(screen_width/2, height*5/6, (height/2)/tan(PI/6)*1.1, width/2, height*2/3, 0, 0, 1, 0)
+        rotateX(-PI/5)
+        drawBackground()
+        bottomlayers.displayBottomLayers(bottom_layers, bottom_layers_colors, origins, scaling, current_u)
+        if dropping:
+            initShape()
+        current_shape.checkBounds(world_size)
+        bottomlayers.checkClear(layer_num_list, world_size, bottom_layers, bottom_layers_colors)
+        current_shape.displayShape(origins, scaling, current_u)
+        dropping = current_shape.checkStop(bottom_layers, bottom_layers_colors, dropping, layer_num_list)
+        endGame()
+
+    else:
+        background(0)
+        camera(screen_width/2, height*5/6, (height/2)/tan(PI/6)*1.1, width/2, height*2/3, 0, 0, 1, 0)
+        rotateX(-PI/5)
+        drawBackground()
+        bottomlayers.displayBottomLayers(bottom_layers, bottom_layers_colors, origins, scaling, current_u)
+        textSize(100)
+        textAlign(CENTER)
+        fill(*[random.random()*255 for i in range(3)])
+        text("You suck", *endgame_coor)
+        if time.time() - endgame_prevtime > 1:
+            endgame_coor = [random.random()*screen_width, random.random()*screen_height, random.random()*200+100]
+            endgame_prevtime = time.time()
 
 def keyPressed():
     global current_shape, current_u
@@ -89,6 +109,12 @@ def initShape():
     
     dropping = False
 
+def endGame():
+    global gameplay
+    for coor in bottom_layers:
+        if coor[3] == world_size[3]-1:
+            gameplay = False
+            return
 
 def drawBackground():
     #xzy
