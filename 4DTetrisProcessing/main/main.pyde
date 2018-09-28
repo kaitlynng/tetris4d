@@ -10,16 +10,24 @@ screen_height = 1000
 scaling = 50
 front_z = -500
 
+grid_stroke = 255
+axes_name_size = 50
+axes_name_color = 255
+text_buffer = 20
+
 #axes defined by hor, ver, dep
-xyz_origin = [(screen_width/8)-(world_size[0]/2)*scaling, (screen_height/2)+(world_size[1]/2)*scaling, 0]
+xyz1_origin = [(screen_width/8)-(world_size[0]/2)*scaling, (screen_height/4)*3+(world_size[1]/2)*scaling, 0]
+xyz2_origin = [(screen_width/8)-(world_size[0]/2)*scaling, (screen_height/4)*2+(world_size[1]/2)*scaling, 0]
+xyz3_origin = [(screen_width/8)-(world_size[0]/2)*scaling, (screen_height/4)+(world_size[1]/2)*scaling, 0]
 xuz_origin = [(screen_width/8)*3-(world_size[0]/2)*scaling, (screen_height/2)+(world_size[2]/2)*scaling, 0]
 xuy_origin = [(screen_width/8)*5-(world_size[0]/2)*scaling, (screen_height/2)+(world_size[2]/2)*scaling, 0]
 yuz_origin = [(screen_width/8)*7-(world_size[1]/2)*scaling, (screen_height/2)+(world_size[2]/2)*scaling, 0]
-origins = [xyz_origin, xuz_origin, xuy_origin, yuz_origin]
-time_delta = 1
+origins = [xyz1_origin, xyz2_origin, xyz3_origin, xuz_origin, xuy_origin, yuz_origin]
+axes_names = [['X', 'Y', 'Z'], ['X', 'U', 'Z'], ['X', 'U', 'Y'], ['Y', 'U', 'Z']]
+time_delta = 2
 
 dropping = True
-current_u = 0
+current_u = [0, 1, 2]
 
 bottom_layers = []
 bottom_layers_colors = []
@@ -32,7 +40,7 @@ def setup():
 def draw():
     global dropping, bottom_layers, bottom_layers_colors
     background(0)
-    camera(width/2, 0, (height/2)/tan(PI/6), width/2, height/2, 0, 0, 1, 0)
+    camera(screen_width/2, 0, (height/2)/tan(PI/6), width/2, height/2, 0, 0, 1, 0)
     drawBackground()
     bottomlayers.displayBottomLayers(bottom_layers, bottom_layers_colors, origins, scaling, current_u)
     if dropping:
@@ -68,29 +76,39 @@ def keyPressed():
     if str(key) in 'rftgyhujikol':
         current_shape.rotShape(*switcher.get(key))
     if str(key) in 'zx':
-        current_u = current_u + switcher.get(key)
+        current_u = [value + switcher.get(key) for value in current_u]
 
 def initShape():
     global current_shape, dropping, time_delta
     current_shape = shapeFunctions.Shape([int(world_size[0]/2), world_size[1], int(world_size[2]/2), world_size[3]], time_delta)
+    
     dropping = False
+
 
 def drawBackground():
     #xzy
-    initGrid(xyz_origin, [world_size[i] for i in [0, 1, 2]])
+    initGrid(xyz1_origin, [world_size[i] for i in [0, 1, 2]])
+    initGrid(xyz2_origin, [world_size[i] for i in [0, 1, 2]])
+    initGrid(xyz3_origin, [world_size[i] for i in [0, 1, 2]])
+    drawAxesName(xyz1_origin, [world_size[0], world_size[1]*3, world_size[2]], axes_names[0])
+
     #xzu
     initGrid(xuz_origin, [world_size[i] for i in [0, 3, 2]])
+    drawAxesName(xuz_origin, [world_size[i] for i in [0, 3, 2]], axes_names[1])
     #xyu
     initGrid(xuy_origin, [world_size[i] for i in [0, 3, 2]])
+    drawAxesName(xuy_origin, [world_size[i] for i in [0, 3, 2]], axes_names[2])
+
     #yuz
     initGrid(yuz_origin, [world_size[i] for i in [1, 3, 2]])
+    drawAxesName(yuz_origin, [world_size[i] for i in [1, 3, 2]], axes_names[3])
+
 
 def initGrid(origin, grid_size):
     #origin should be a list of three coordinates [hor, ver, dep]
     #size should be a list of three sizes [hor, ver, dep]
-    global xyz_origin
     
-    stroke(255)
+    stroke(grid_stroke)
     noFill()
     
     pushMatrix()
@@ -125,5 +143,19 @@ def initGrid(origin, grid_size):
         translate(0, 0, scaling)
     popMatrix()
     
+    popMatrix()
+
+def drawAxesName(origin, grid_size, axes_name):
+    textSize(axes_name_size)
+    fill(axes_name_color)
+    textAlign(CENTER)
+    #write XYZ
+    
+    #write XUZ
+    pushMatrix()
+    translate(*origin)
+    text(axes_name[0], grid_size[0]/2*scaling, axes_name_size/2+text_buffer, grid_size[2]*scaling)
+    text(axes_name[1], grid_size[0]*scaling+axes_name_size/2+text_buffer, -grid_size[1]/2*scaling, 0)
+    text(axes_name[2], grid_size[0]*scaling+axes_name_size/2+text_buffer, 0, grid_size[2]/2*scaling)
     popMatrix()
     
