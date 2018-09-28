@@ -1,5 +1,6 @@
 def matmul(mat1,mat2):
-
+    #matrix multiplication code, because processing doesn't have numpy support
+    
 	rows1, cols1, rows2, cols2 = len(mat1), len(mat1[0]), len(mat2), len(mat2[0])
 
 	if cols1 != rows2 :

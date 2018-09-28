@@ -1,4 +1,9 @@
 import matmul
+"""
+Handles rotations
+
+"""
+
 
 def rotXY(a):
     if a == 0:

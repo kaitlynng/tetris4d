@@ -4,6 +4,26 @@ import translate4D
 import time
 import copy
 
+"""
+Handles falling block (current_shape)
+
+display_func: draws blocks
+Shape: class for falling block
+        list of shape coordinates: specify the positions of the blocks relative 
+            to one corner
+        position coordinate: specify the world coordinates of the corner block
+        rotateShape: uses rotate4D to rotate blocks, but first checks whether the
+            desired rotation is possible
+        transShape: uses translate4D to translate blocks, but first checks whether
+            the desired translation is possible
+        displayShape: displays shape
+        checkBounds: check if block is outside boundaries
+        checkStop: handles movement and stopping
+    
+
+"""
+
+#set of 4-block shapes
 shapes_list_coor = [[[0,0,0,0],[1,0,0,0],[2,0,0,0],[3,0,0,0]],
                     [[0,0,0,0],[1,0,0,0],[2,0,0,0],[2,0,1,0]],
                     [[0,0,0,0],[1,0,0,0],[1,0,1,0],[2,0,1,0]],
@@ -11,9 +31,9 @@ shapes_list_coor = [[[0,0,0,0],[1,0,0,0],[2,0,0,0],[3,0,0,0]],
                     [[0,0,0,0],[1,0,0,0],[2,0,0,0],[1,1,0,0]],
                     [[0,0,0,0],[1,0,0,0],[0,1,0,0],[1,1,0,0]],
                     [[0,0,0,0],[0,1,0,0],[0,1,1,0],[1,1,1,0]]]
+#graphic details of blocks
 shapes_list_color = [[255, 157, 242], [175, 255, 234], [245, 255, 175],
                       [255, 175, 175], [200, 177, 255], [135, 255, 151], [165, 192, 255]]
-
 block_stroke = 0
 transparency = 60
 
@@ -46,7 +66,11 @@ class Shape:
     def rotShape(self, plane, direction, bottom_layers, world_size):
         temp_coor = rotate4D.rotate4D(self.shape_coor, plane, direction)
         temp2_coor = self.pos_coor[:]
+        
+        #gets position coordinates of each block in shape
         worldcoords = [list(a+b for a,b in zip(j, temp2_coor)) for j in temp_coor]
+        
+        #checks if rotation rotates out of the boundaries
         for i in range(4):
             min_coord = min([j[i] for j in worldcoords])
             max_coord = max([j[i] for j in worldcoords])
@@ -56,6 +80,7 @@ class Shape:
             while min_coord < 0:
                 temp2_coor = translate4D.translate4D(temp2_coor, i, 1)
                 min_coord +=1
+        #checks if rotation rotates into a bottom-layer block
         worldcoords = [list(a+b for a,b in zip(j, temp2_coor)) for j in temp_coor]
         for coor in worldcoords:
             if coor in bottom_layers:
