@@ -71,7 +71,7 @@ class Shape:
                 self.pos_coor = translate4D.translate4D(self.pos_coor, i, 1)
                 min_coord +=1
     def checkStop(self, bottom_layers):
-        next_u = self.pos_coor[3][:] + 1
+        next_u = self.pos_coor[3][:] - 1
         worldcoords = [list(a+b for a,b in zip(j, self.pos_coor)) for j in self.shape_coor]
         
         

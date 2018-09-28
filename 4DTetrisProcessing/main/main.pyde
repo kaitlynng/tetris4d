@@ -41,9 +41,9 @@ def keyPressed():
     global current_shape, current_u
     switcher = {
         #Translations
-        'q': [1,-1], 'a': [0,-1], 
+        'q': [1,1], 'a': [0,-1], 
         'w': [2,-1], 's': [2,1], 
-        'e': [1,1], 'd': [0,1],
+        'e': [1,-1], 'd': [0,1],
         #XU
         'r': [3, 1], 'f': [3, 0],
         #YU
@@ -68,7 +68,7 @@ def keyPressed():
 
 def initShape():
     global current_shape, dropping
-    current_shape = shapeFunctions.Shape([0, 0, 0, 0])
+    current_shape = shapeFunctions.Shape([int(world_size[0]/2), world_size[1], int(world_size[2]/2), world_size[3]])
     dropping = False
 
 def drawBackground():
@@ -96,8 +96,8 @@ def initGrid(origin, grid_size):
     #draw hor-ver plane
     beginShape()
     vertex(0, 0, 0)
-    vertex(0, -scaling*grid_size[1], 0)
-    vertex(scaling*grid_size[0], -scaling*grid_size[1], 0)
+    vertex(0, scaling*grid_size[1], 0)
+    vertex(scaling*grid_size[0], scaling*grid_size[1], 0)
     vertex(scaling*grid_size[0], 0, 0)
     endShape()
     
@@ -105,8 +105,8 @@ def initGrid(origin, grid_size):
     beginShape()
     vertex(0, 0, 0)
     vertex(0, 0, scaling*grid_size[2])
-    vertex(0, -scaling*grid_size[1], scaling*grid_size[2])
-    vertex(0, -scaling*grid_size[1], 0)
+    vertex(0, scaling*grid_size[1], scaling*grid_size[2])
+    vertex(0, scaling*grid_size[1], 0)
     endShape()
     
     #draw xz grid
@@ -121,6 +121,5 @@ def initGrid(origin, grid_size):
         translate(0, 0, scaling)
     popMatrix()
     
-    if origin 
     popMatrix()
     
