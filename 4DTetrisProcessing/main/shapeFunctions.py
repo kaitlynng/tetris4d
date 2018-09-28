@@ -1,6 +1,7 @@
 import random
 import rotate4D
 import translate4D
+import time
 
 shapes_list_coor = [[[0,0,0,0],[1,0,0,0],[2,0,0,0],[3,0,0,0]],
                     [[0,0,0,0],[1,0,0,0],[2,0,0,0],[2,0,1,0]],
@@ -28,16 +29,19 @@ def display_func(pos_coor, shape_coor, ax, origin, scaling):
 
 
 class Shape:
-    def __init__(self, pos_coor):
+    def __init__(self, pos_coor, time_delta):
         self.shape_coor = random.choice(shapes_list_coor)
         self.shape_color = shapes_list_color[shapes_list_coor.index(self.shape_coor)]
         self.pos_coor = pos_coor #in world coordinates
-    
+        self.prev_time = 0
+        self.time_delta = time_delta
+        
     def rotShape(self, plane, direction):
         self.shape_coor = rotate4D.rotate4D(self.shape_coor, plane, direction)
     
     def transShape(self, rotKey, direction):
         self.pos_coor = translate4D.translate4D(self.pos_coor, rotKey, direction)
+    
     
     def displayShape(self, origins, scaling, current_u):
         axes = [[0,1,2],[0,3,2],[0,3,1],[1,3,2]]
@@ -70,9 +74,27 @@ class Shape:
             while min_coord < 0:
                 self.pos_coor = translate4D.translate4D(self.pos_coor, i, 1)
                 min_coord +=1
-    def checkStop(self, bottom_layers):
-        next_u = self.pos_coor[3][:] - 1
+                
+    def checkStop(self, bottom_layers, bottom_layers_colors):
         worldcoords = [list(a+b for a,b in zip(j, self.pos_coor)) for j in self.shape_coor]
+        worldcoords_next = worldcoords[:]
+        stop_shape = False
+        for coor in worldcoords_next:
+            coor[3] -= 1
+            if coor in bottom_layers:
+                stop_shape = True
+            elif coor[3] < 0:
+                stop_shape = True
+        if stop_shape:
+            bottom_layers += worldcoords
+            bottom_layers_colors += [self.shape_color for i in range(len(self.shape_coor))]
+        else:
+            if time.time()-self.prev_time > self.time_delta:
+                self.transShape(3,-1)
+                self.prev_time = time.time()
+        return stop_shape
+            
         
+            
         
         

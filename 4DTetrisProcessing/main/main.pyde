@@ -15,12 +15,15 @@ xuz_origin = [(screen_width/8)*3-(world_size[0]/2)*scaling, (screen_height/2)+(w
 xuy_origin = [(screen_width/8)*5-(world_size[0]/2)*scaling, (screen_height/2)+(world_size[2]/2)*scaling, 0]
 yuz_origin = [(screen_width/8)*7-(world_size[1]/2)*scaling, (screen_height/2)+(world_size[2]/2)*scaling, 0]
 origins = [xyz_origin, xuz_origin, xuy_origin, yuz_origin]
+time_delta = 0.5
 
 dropping = True
 current_u = 0
 
 #JUST FOR TEST, SORRY IF I FORGET TO REMOVE
 current_shape = [[0,0,0,0],[1,0,0,0],[2,0,0,0],[3,0,0,0]]
+bottom_layers = []
+bottom_layers_colors = []
 
 def setup():
     size(screen_width, screen_height, P3D)
@@ -28,14 +31,17 @@ def setup():
     draw()
 
 def draw():
+    global dropping
     background(0)
     camera(width/2, 0, (height/2)/tan(PI/6), width/2, height/2, 0, 0, 1, 0)
     drawBackground()
+    #display bottom layers
     if dropping == True:
         initShape()
     current_shape.checkBounds(world_size)
     current_shape.displayShape(origins, scaling, current_u)
-    
+    if current_shape.checkStop(bottom_layers, bottom_layers_colors):
+        dropping = True
 
 def keyPressed():
     global current_shape, current_u
@@ -67,8 +73,9 @@ def keyPressed():
         current_u = current_u + switcher.get(key)
 
 def initShape():
-    global current_shape, dropping
-    current_shape = shapeFunctions.Shape([int(world_size[0]/2), world_size[1], int(world_size[2]/2), world_size[3]])
+    global current_shape, dropping, time_delta
+    print("new shape!")
+    current_shape = shapeFunctions.Shape([int(world_size[0]/2), world_size[1], int(world_size[2]/2), world_size[3]], time_delta)
     dropping = False
 
 def drawBackground():
