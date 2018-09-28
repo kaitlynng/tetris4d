@@ -35,6 +35,7 @@ class Shape:
         self.pos_coor = pos_coor #in world coordinates
         self.prev_time = 0
         self.time_delta = time_delta
+        self.check_iter = 0 #for debugging
         
     def rotShape(self, plane, direction):
         self.shape_coor = rotate4D.rotate4D(self.shape_coor, plane, direction)
@@ -76,27 +77,33 @@ class Shape:
                 min_coord +=1
                 
     def checkStop(self, bottom_layers, bottom_layers_colors):
-        worldcoords = [list(a+b for a,b in zip(j, self.pos_coor)) for j in self.shape_coor]
-        worldcoords_next = [coor for coor in worldcoords]
         stop_shape = False
-        for coor in worldcoords_next:
-            coor[3] -= 1
-            if coor in bottom_layers:
-                print("overlap")
-                print(coor)
-                stop_shape = True
-                break
-            if coor[3] <= 0:
-                stop_shape = True
-                break
-        if stop_shape:
-            bottom_layers += worldcoords
-            bottom_layers_colors += [self.shape_color for i in range(len(self.shape_coor))]
-        else:
-            if time.time()-self.prev_time > self.time_delta:
+        if time.time()-self.prev_time > self.time_delta:
+            self.check_iter += 1
+            print(self.check_iter)
+            worldcoords = [list(a+b for a,b in zip(j, self.pos_coor)) for j in self.shape_coor]
+            print("Worldcoords one")
+            print(worldcoords)
+            worldcoords_next = [coor for coor in worldcoords]
+            for coor in worldcoords_next:
+                coor[3] -= 1
+                if coor in bottom_layers:
+                    stop_shape = True 
+                if coor[3] < 0:
+                    stop_shape = True
+            if stop_shape:
+                print("Woorldcoords two")
+                print(worldcoords)
+                print("direct")
+                print([list(a+b for a,b in zip(j, self.pos_coor)) for j in self.shape_coor])
+                bottom_layers += [list(a+b for a,b in zip(j, self.pos_coor)) for j in self.shape_coor]
+                bottom_layers_colors += [self.shape_color for i in range(len(self.shape_coor))]
+                print("bottom_layers")
+                print(bottom_layers)
+            else:
                 self.transShape(3,-1)
                 self.prev_time = time.time()
-        return stop_shape
+        return stop_shape, bottom_layers, bottom_layers_colors
             
         
             

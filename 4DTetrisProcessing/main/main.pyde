@@ -30,18 +30,17 @@ def setup():
     draw()
 
 def draw():
-    global dropping
+    global dropping, bottom_layers, bottom_layers_colors
     background(0)
     camera(width/2, 0, (height/2)/tan(PI/6), width/2, height/2, 0, 0, 1, 0)
     drawBackground()
     bottomlayers.displayBottomLayers(bottom_layers, bottom_layers_colors, origins, scaling, current_u)
-    if dropping == True:
+    if dropping:
         initShape()
     current_shape.checkBounds(world_size)
     current_shape.displayShape(origins, scaling, current_u)
-    if current_shape.checkStop(bottom_layers, bottom_layers_colors):
-        dropping = True
-
+    dropping, bottom_layers, bottom_layers_colors = current_shape.checkStop(bottom_layers, bottom_layers_colors)
+    
 def keyPressed():
     global current_shape, current_u
     switcher = {
@@ -73,7 +72,6 @@ def keyPressed():
 
 def initShape():
     global current_shape, dropping, time_delta
-    print("new shape!")
     current_shape = shapeFunctions.Shape([int(world_size[0]/2), world_size[1], int(world_size[2]/2), world_size[3]], time_delta)
     dropping = False
 
