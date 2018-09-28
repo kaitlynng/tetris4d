@@ -2,7 +2,6 @@ from matmul import *
 from rotate4D import *
 import translate4D
 import shapeFunctions
-import bottomlayers
 
 world_size = [5, 5, 5, 10] #x, y, z, u
 screen_width = 1800
@@ -16,13 +15,12 @@ xuz_origin = [(screen_width/8)*3-(world_size[0]/2)*scaling, (screen_height/2)+(w
 xuy_origin = [(screen_width/8)*5-(world_size[0]/2)*scaling, (screen_height/2)+(world_size[2]/2)*scaling, 0]
 yuz_origin = [(screen_width/8)*7-(world_size[1]/2)*scaling, (screen_height/2)+(world_size[2]/2)*scaling, 0]
 origins = [xyz_origin, xuz_origin, xuy_origin, yuz_origin]
-time_delta = 0.5
 
 dropping = True
 current_u = 0
 
-bottom_layers = []
-bottom_layers_colors = []
+#JUST FOR TEST, SORRY IF I FORGET TO REMOVE
+current_shape = [[0,0,0,0],[1,0,0,0],[2,0,0,0],[3,0,0,0]]
 
 def setup():
     size(screen_width, screen_height, P3D)
@@ -30,25 +28,22 @@ def setup():
     draw()
 
 def draw():
-    global dropping
     background(0)
     camera(width/2, 0, (height/2)/tan(PI/6), width/2, height/2, 0, 0, 1, 0)
     drawBackground()
-    bottomlayers.displayBottomLayers(bottom_layers, bottom_layers_colors, origins, scaling, current_u)
     if dropping == True:
         initShape()
     current_shape.checkBounds(world_size)
     current_shape.displayShape(origins, scaling, current_u)
-    if current_shape.checkStop(bottom_layers, bottom_layers_colors):
-        dropping = True
+    
 
 def keyPressed():
     global current_shape, current_u
     switcher = {
         #Translations
-        'q': [1,1], 'a': [0,-1], 
+        'q': [1,-1], 'a': [0,-1], 
         'w': [2,-1], 's': [2,1], 
-        'e': [1,-1], 'd': [0,1],
+        'e': [1,1], 'd': [0,1],
         #XU
         'r': [3, 1], 'f': [3, 0],
         #YU
@@ -72,9 +67,8 @@ def keyPressed():
         current_u = current_u + switcher.get(key)
 
 def initShape():
-    global current_shape, dropping, time_delta
-    print("new shape!")
-    current_shape = shapeFunctions.Shape([int(world_size[0]/2), world_size[1], int(world_size[2]/2), world_size[3]], time_delta)
+    global current_shape, dropping
+    current_shape = shapeFunctions.Shape([0, 0, 0, 0])
     dropping = False
 
 def drawBackground():
@@ -102,8 +96,8 @@ def initGrid(origin, grid_size):
     #draw hor-ver plane
     beginShape()
     vertex(0, 0, 0)
-    vertex(0, scaling*grid_size[1], 0)
-    vertex(scaling*grid_size[0], scaling*grid_size[1], 0)
+    vertex(0, -scaling*grid_size[1], 0)
+    vertex(scaling*grid_size[0], -scaling*grid_size[1], 0)
     vertex(scaling*grid_size[0], 0, 0)
     endShape()
     
@@ -111,8 +105,8 @@ def initGrid(origin, grid_size):
     beginShape()
     vertex(0, 0, 0)
     vertex(0, 0, scaling*grid_size[2])
-    vertex(0, scaling*grid_size[1], scaling*grid_size[2])
-    vertex(0, scaling*grid_size[1], 0)
+    vertex(0, -scaling*grid_size[1], scaling*grid_size[2])
+    vertex(0, -scaling*grid_size[1], 0)
     endShape()
     
     #draw xz grid
@@ -126,6 +120,6 @@ def initGrid(origin, grid_size):
         line(0, 0, 0, scaling*grid_size[0], 0, 0)
         translate(0, 0, scaling)
     popMatrix()
-    
+
     popMatrix()
     
