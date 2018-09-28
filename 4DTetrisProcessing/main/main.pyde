@@ -16,9 +16,9 @@ axes_name_color = 255
 text_buffer = 20
 
 #axes defined by hor, ver, dep
-xyz1_origin = [(screen_width/8)-(world_size[0]/2)*scaling, (screen_height*17/24)+(world_size[1]/2)*scaling, 0]
-xyz2_origin = [(screen_width/8)-(world_size[0]/2)*scaling, (screen_height*12/24)+(world_size[1]/2)*scaling, 0]
-xyz3_origin = [(screen_width/8)-(world_size[0]/2)*scaling, (screen_height*7/24)+(world_size[1]/2)*scaling, 0]
+xyz1_origin = [(screen_width/8)-(world_size[0]/2)*scaling, (screen_height*20/24)+(world_size[1]/2)*scaling, 0]
+xyz2_origin = [(screen_width/8)-(world_size[0]/2)*scaling, (screen_height*13/24)+(world_size[1]/2)*scaling, 0]
+xyz3_origin = [(screen_width/8)-(world_size[0]/2)*scaling, (screen_height*6/24)+(world_size[1]/2)*scaling, 0]
 xuz_origin = [(screen_width/8)*3-(world_size[0]/2)*scaling, (screen_height*3/4)+(world_size[2]/2)*scaling, 0]
 xuy_origin = [(screen_width/8)*5-(world_size[0]/2)*scaling, (screen_height*3/4)+(world_size[2]/2)*scaling, 0]
 yuz_origin = [(screen_width/8)*7-(world_size[1]/2)*scaling, (screen_height*3/4)+(world_size[2]/2)*scaling, 0]
@@ -67,9 +67,9 @@ def keyPressed():
         #ZU
         'y': [5, 1], 'h': [5, 0],
         #XY
-        'u': [0, 1], 'j': [0, 0],
+        'i': [0, 1], 'k': [0, 0],
         #XZ
-        'i': [2, 1], 'k': [2, 0],
+        'u': [2, 1], 'j': [2, 0],
         #YZ
         'o': [1, 1], 'l': [1, 0],
         #adjust u coordinate
