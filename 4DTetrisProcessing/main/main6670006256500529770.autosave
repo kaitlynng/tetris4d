@@ -2,7 +2,6 @@ from matmul import *
 from rotate4D import *
 import translate4D
 import shapeFunctions
-import bottomlayers
 
 world_size = [5, 5, 5, 10] #x, y, z, u
 screen_width = 1800
@@ -21,8 +20,7 @@ dropping = True
 current_u = 0
 
 #JUST FOR TEST, SORRY IF I FORGET TO REMOVE
-bottom_layers = [[1,0,0,0]]
-bottom_layers_colors = [[50,50,50]]
+current_shape = [[0,0,0,0],[1,0,0,0],[2,0,0,0],[3,0,0,0]]
 
 def setup():
     size(screen_width, screen_height, P3D)
@@ -37,17 +35,15 @@ def draw():
         initShape()
     current_shape.checkBounds(world_size)
     current_shape.displayShape(origins, scaling, current_u)
-    bottomlayers.displayBottomLayers(bottom_layers, bottom_layers_colors, origins, scaling, current_u)
-    
     
 
 def keyPressed():
     global current_shape, current_u
     switcher = {
         #Translations
-        'q': [1,1], 'a': [0,-1], 
+        'q': [1,-1], 'a': [0,-1], 
         'w': [2,-1], 's': [2,1], 
-        'e': [1,-1], 'd': [0,1],
+        'e': [1,1], 'd': [0,1],
         #XU
         'r': [3, 1], 'f': [3, 0],
         #YU
@@ -72,7 +68,7 @@ def keyPressed():
 
 def initShape():
     global current_shape, dropping
-    current_shape = shapeFunctions.Shape([int(world_size[0]/2), world_size[1], int(world_size[2]/2), world_size[3]])
+    current_shape = shapeFunctions.Shape([0, 0, 0, 0])
     dropping = False
 
 def drawBackground():
@@ -100,8 +96,8 @@ def initGrid(origin, grid_size):
     #draw hor-ver plane
     beginShape()
     vertex(0, 0, 0)
-    vertex(0, scaling*grid_size[1], 0)
-    vertex(scaling*grid_size[0], scaling*grid_size[1], 0)
+    vertex(0, -scaling*grid_size[1], 0)
+    vertex(scaling*grid_size[0], -scaling*grid_size[1], 0)
     vertex(scaling*grid_size[0], 0, 0)
     endShape()
     
@@ -109,8 +105,8 @@ def initGrid(origin, grid_size):
     beginShape()
     vertex(0, 0, 0)
     vertex(0, 0, scaling*grid_size[2])
-    vertex(0, scaling*grid_size[1], scaling*grid_size[2])
-    vertex(0, scaling*grid_size[1], 0)
+    vertex(0, -scaling*grid_size[1], scaling*grid_size[2])
+    vertex(0, -scaling*grid_size[1], 0)
     endShape()
     
     #draw xz grid
@@ -124,6 +120,6 @@ def initGrid(origin, grid_size):
         line(0, 0, 0, scaling*grid_size[0], 0, 0)
         translate(0, 0, scaling)
     popMatrix()
-    
+
     popMatrix()
     
