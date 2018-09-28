@@ -84,11 +84,14 @@ def drawBackground():
 def initGrid(origin, grid_size):
     #origin should be a list of three coordinates [hor, ver, dep]
     #size should be a list of three sizes [hor, ver, dep]
+    global xyz_origin
+    
     stroke(255)
     noFill()
     
     pushMatrix()
     translate(*origin)
+    scale(1, -1, 1)
     
     #draw hor-ver plane
     beginShape()
@@ -117,6 +120,7 @@ def initGrid(origin, grid_size):
         line(0, 0, 0, scaling*grid_size[0], 0, 0)
         translate(0, 0, scaling)
     popMatrix()
-
+    
+    if origin 
     popMatrix()
     

@@ -15,13 +15,17 @@ shapes_list_color = [[30, 30, 30], [40, 40, 40], [50, 30, 100],
 def display_func(pos_coor, shape_coor, ax, origin, scaling):
     pushMatrix()
     translate(*origin)
+    scale(1, -1, 1)
+    
     translate(*[pos_coor[i]*scaling for i in ax])
     for cube in shape_coor:
         pushMatrix()
         translate(*[cube[i]*scaling for i in ax])
         box(scaling)
         popMatrix()
+    
     popMatrix()
+
 
 class Shape:
     def __init__(self, pos_coor):
@@ -45,10 +49,11 @@ class Shape:
         for coor in self.shape_coor:
             if coor[3]-self.shape_coor[0][3]+self.pos_coor[3] == current_u:
                 xyz_cubes += [coor]
-        pos_coor_edit = []
-        pos_coor_edit += self.pos_coor
-        pos_coor_edit[1] = -pos_coor_edit[1]
-        display_func(pos_coor_edit, xyz_cubes, axes[0], origins[0], scaling)
+        #pos_coor_edit = []
+        #pos_coor_edit += self.pos_coor
+        #pos_coor_edit[1] = -pos_coor_edit[1]
+        #display_func(pos_coor_edit, xyz_cubes, axes[0], origins[0], scaling)
+        display_func(self.pos_coor, xyz_cubes, axes[0], origins[0], scaling)
         
         for iter in range(1, len(axes)):
             display_func(self.pos_coor, self.shape_coor, axes[iter], origins[iter], scaling)
@@ -65,3 +70,9 @@ class Shape:
             while min_coord < 0:
                 self.pos_coor = translate4D.translate4D(self.pos_coor, i, 1)
                 min_coord +=1
+    def checkStop(self, bottom_layers):
+        next_u = self.pos_coor[3][:] + 1
+        worldcoords = [list(a+b for a,b in zip(j, self.pos_coor)) for j in self.shape_coor]
+        
+        
+        
