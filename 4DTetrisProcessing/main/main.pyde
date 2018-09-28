@@ -46,7 +46,6 @@ def draw():
     bottomlayers.displayBottomLayers(bottom_layers, bottom_layers_colors, origins, scaling, current_u)
     if dropping:
         initShape()
-        print("new shape")
     current_shape.checkBounds(world_size)
     bottomlayers.checkClear(layer_num_list, world_size, bottom_layers, bottom_layers_colors)
     current_shape.displayShape(origins, scaling, current_u)
