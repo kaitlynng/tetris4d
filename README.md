@@ -3,7 +3,6 @@ A fun game for family and friends
 </br>
 Tetris but in 4D. Where normal tetris is played in 2D, this is in 4D. Double the D. XDD 
 </br>
-Coming soon in the next demo-disk.
 
 <h2>To play</h2>
 <ol>
@@ -61,4 +60,4 @@ Coming soon in the next demo-disk.
   <li>button to clear a level to prevent rage</li>
 </ul>
 </br>
-Available in stores near you.
+5D DLC out soon
