@@ -5,7 +5,7 @@ import shapeFunctions
 import bottomlayers
 
 world_size = [5, 5, 5, 10] #x, y, z, u
-screen_width = 1800
+screen_width = 1400
 screen_height = 1000
 scaling = 50
 front_z = -500
@@ -31,6 +31,7 @@ current_u = [0, 1, 2]
 
 bottom_layers = []
 bottom_layers_colors = []
+layer_num_list = [0]*world_size[3]
 
 def setup():
     size(screen_width, screen_height, P3D)
@@ -38,17 +39,20 @@ def setup():
     draw()
 
 def draw():
-    global dropping, bottom_layers, bottom_layers_colors
+    global dropping
     background(0)
     camera(screen_width/2, 0, (height/2)/tan(PI/6), width/2, height/2, 0, 0, 1, 0)
     drawBackground()
     bottomlayers.displayBottomLayers(bottom_layers, bottom_layers_colors, origins, scaling, current_u)
     if dropping:
         initShape()
+        print("new shape")
     current_shape.checkBounds(world_size)
+    bottomlayers.checkClear(layer_num_list, world_size, bottom_layers, bottom_layers_colors)
     current_shape.displayShape(origins, scaling, current_u)
-    dropping, bottom_layers, bottom_layers_colors = current_shape.checkStop(bottom_layers, bottom_layers_colors)
+    dropping = current_shape.checkStop(bottom_layers, bottom_layers_colors, dropping, layer_num_list)
     
+
 def keyPressed():
     global current_shape, current_u
     switcher = {

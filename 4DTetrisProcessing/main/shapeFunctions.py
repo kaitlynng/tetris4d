@@ -41,7 +41,6 @@ class Shape:
         self.pos_coor = pos_coor #in world coordinates
         self.prev_time = 0
         self.time_delta = time_delta
-        self.check_iter = 0 #for debugging
         
     def rotShape(self, plane, direction):
         self.shape_coor = rotate4D.rotate4D(self.shape_coor, plane, direction)
@@ -62,7 +61,6 @@ class Shape:
             for coor in self.shape_coor:
                 if coor[3]-self.shape_coor[0][3]+self.pos_coor[3] == current_u[i]:
                     xyz_cubes += [coor]
-        
             display_func(self.pos_coor, xyz_cubes, axes[0], origins[i], scaling)
 
         for iter in range(1, len(axes)):
@@ -80,29 +78,31 @@ class Shape:
             while min_coord < 0:
                 self.pos_coor = translate4D.translate4D(self.pos_coor, i, 1)
                 min_coord +=1
-                
-    def checkStop(self, bottom_layers, bottom_layers_colors):
-        global transparency
-        stop_shape = False
+ 
+    def checkStop(self, bottom_layers, bottom_layers_colors, dropping, layer_num_list):
+        dropping = False
         if time.time()-self.prev_time > self.time_delta:
             worldcoords = tuple((tuple(a+b for a,b in zip(j, self.pos_coor)) for j in self.shape_coor))
             worldcoords_next = [list(coor) for coor in worldcoords]
             for coor in worldcoords_next:
                 coor[3] -= 1
                 if coor in bottom_layers:
-                    stop_shape = True
+                    dropping = True
                     break
                 if coor[3] < 0:
-                    stop_shape = True
+                    dropping = True
                     break
-            if stop_shape:
+            if dropping:
                 worldcoords = [list(coor) for coor in worldcoords]
                 bottom_layers += worldcoords
-                bottom_layers_colors += [self.shape_color+[transparency] for i in range(len(self.shape_coor))]
+                bottom_layers_colors += [self.shape_color+[transparency] for i in range(len(self.shape_coor))]    
+                for coor in worldcoords:
+                    layer_num_list[coor[3]] += 1
             else:
                 self.transShape(3,-1)
                 self.prev_time = time.time()
-        return stop_shape, bottom_layers, bottom_layers_colors
+
+        return dropping
             
         
             
