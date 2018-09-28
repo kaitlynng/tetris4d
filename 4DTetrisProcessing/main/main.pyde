@@ -16,12 +16,12 @@ axes_name_color = 255
 text_buffer = 20
 
 #axes defined by hor, ver, dep
-xyz1_origin = [(screen_width/8)-(world_size[0]/2)*scaling, (screen_height/4)*3+(world_size[1]/2)*scaling, 0]
-xyz2_origin = [(screen_width/8)-(world_size[0]/2)*scaling, (screen_height/4)*2+(world_size[1]/2)*scaling, 0]
-xyz3_origin = [(screen_width/8)-(world_size[0]/2)*scaling, (screen_height/4)+(world_size[1]/2)*scaling, 0]
-xuz_origin = [(screen_width/8)*3-(world_size[0]/2)*scaling, (screen_height/2)+(world_size[2]/2)*scaling, 0]
-xuy_origin = [(screen_width/8)*5-(world_size[0]/2)*scaling, (screen_height/2)+(world_size[2]/2)*scaling, 0]
-yuz_origin = [(screen_width/8)*7-(world_size[1]/2)*scaling, (screen_height/2)+(world_size[2]/2)*scaling, 0]
+xyz1_origin = [(screen_width/8)-(world_size[0]/2)*scaling, (screen_height*17/24)+(world_size[1]/2)*scaling, 0]
+xyz2_origin = [(screen_width/8)-(world_size[0]/2)*scaling, (screen_height*12/24)+(world_size[1]/2)*scaling, 0]
+xyz3_origin = [(screen_width/8)-(world_size[0]/2)*scaling, (screen_height*7/24)+(world_size[1]/2)*scaling, 0]
+xuz_origin = [(screen_width/8)*3-(world_size[0]/2)*scaling, (screen_height*3/4)+(world_size[2]/2)*scaling, 0]
+xuy_origin = [(screen_width/8)*5-(world_size[0]/2)*scaling, (screen_height*3/4)+(world_size[2]/2)*scaling, 0]
+yuz_origin = [(screen_width/8)*7-(world_size[1]/2)*scaling, (screen_height*3/4)+(world_size[2]/2)*scaling, 0]
 origins = [xyz1_origin, xyz2_origin, xyz3_origin, xuz_origin, xuy_origin, yuz_origin]
 axes_names = [['X', 'Y', 'Z'], ['X', 'U', 'Z'], ['X', 'U', 'Y'], ['Y', 'U', 'Z']]
 time_delta = 2
@@ -41,12 +41,12 @@ def setup():
 def draw():
     global dropping
     background(0)
-    camera(screen_width/2, 0, (height/2)/tan(PI/6), width/2, height/2, 0, 0, 1, 0)
+    camera(screen_width/2, height*5/6, (height/2)/tan(PI/6)*1.1, width/2, height*2/3, 0, 0, 1, 0)
+    rotateX(-PI/5)
     drawBackground()
     bottomlayers.displayBottomLayers(bottom_layers, bottom_layers_colors, origins, scaling, current_u)
     if dropping:
         initShape()
-        print("new shape")
     current_shape.checkBounds(world_size)
     bottomlayers.checkClear(layer_num_list, world_size, bottom_layers, bottom_layers_colors)
     current_shape.displayShape(origins, scaling, current_u)
