@@ -32,7 +32,9 @@ def displayBottomLayers(bottom_layers, bottom_layers_colors, origins, scaling, c
 def checkClear(layer_num_list, world_size, bottom_layers, bottom_layers_colors):
     layermax = world_size[0]*world_size[1]*world_size[2]
     for iter in range(len(layer_num_list)):
+        print(layer_num_list)
         if layer_num_list[iter] >= layermax:
+            print("working")
             for i in range(iter,len(layer_num_list)-1):
                 layer_num_list[i] = layer_num_list[i+1]
             layer_num_list[len(layer_num_list)-1] = 0

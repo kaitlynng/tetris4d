@@ -53,10 +53,6 @@ class Shape:
         for coor in self.shape_coor:
             if coor[3]-self.shape_coor[0][3]+self.pos_coor[3] == current_u:
                 xyz_cubes += [coor]
-        #pos_coor_edit = []
-        #pos_coor_edit += self.pos_coor
-        #pos_coor_edit[1] = -pos_coor_edit[1]
-        #display_func(pos_coor_edit, xyz_cubes, axes[0], origins[0], scaling)
         display_func(self.pos_coor, xyz_cubes, axes[0], origins[0], scaling)
         
         for iter in range(1, len(axes)):
@@ -75,29 +71,30 @@ class Shape:
                 self.pos_coor = translate4D.translate4D(self.pos_coor, i, 1)
                 min_coord +=1
                 
-    def checkStop(self, bottom_layers, bottom_layers_colors,layer_num_list):
-        worldcoords = tuple((tuple(a+b for a,b in zip(j, self.pos_coor)) for j in self.shape_coor))
-        worldcoords_next = [list(coor) for coor in worldcoords]
-        stop_shape = False
-        for coor in worldcoords_next:
-            coor[3] -= 1
-            if coor in bottom_layers:
-                stop_shape = True
-                break
-            if coor[3] <= -1:
-                stop_shape = True
-                break
-        if stop_shape:
-            worldcoords = [list(coor) for coor in worldcoords]
-            bottom_layers += worldcoords
-            bottom_layers_colors += [self.shape_color for i in range(len(self.shape_coor))]
-            for coor in worldcoords:
-                layer_num_list[coor[3]] += 1
-        else:
-            if time.time()-self.prev_time > self.time_delta:
+    def checkStop(self, bottom_layers, bottom_layers_colors, dropping, layer_num_list):
+        dropping = False
+        if time.time()-self.prev_time > self.time_delta:
+            worldcoords = tuple((tuple(a+b for a,b in zip(j, self.pos_coor)) for j in self.shape_coor))
+            worldcoords_next = [list(coor) for coor in worldcoords]
+            for coor in worldcoords_next:
+                coor[3] -= 1
+                if coor in bottom_layers:
+                    dropping = True
+                    break
+                if coor[3] < 0:
+                    dropping = True
+                    break
+            if dropping:
+                worldcoords = [list(coor) for coor in worldcoords]
+                bottom_layers += worldcoords
+                bottom_layers_colors += [self.shape_color for i in range(len(self.shape_coor))]
+                for coor in worldcoords:
+                    layer_num_list[coor[3]] += 1
+            else:
                 self.transShape(3,-1)
                 self.prev_time = time.time()
-        return stop_shape
+
+        return dropping
             
         
             

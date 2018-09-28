@@ -17,7 +17,7 @@ xuz_origin = [(screen_width/8)*3-(world_size[0]/2)*scaling, (screen_height/2)+(w
 xuy_origin = [(screen_width/8)*5-(world_size[0]/2)*scaling, (screen_height/2)+(world_size[2]/2)*scaling, 0]
 yuz_origin = [(screen_width/8)*7-(world_size[1]/2)*scaling, (screen_height/2)+(world_size[2]/2)*scaling, 0]
 origins = [xyz_origin, xuz_origin, xuy_origin, yuz_origin]
-time_delta = 0.5
+time_delta = 1
 
 dropping = True
 current_u = 0
@@ -37,13 +37,14 @@ def draw():
     camera(width/2, 0, (height/2)/tan(PI/6), width/2, height/2, 0, 0, 1, 0)
     drawBackground()
     bottomlayers.displayBottomLayers(bottom_layers, bottom_layers_colors, origins, scaling, current_u)
-    bottomlayers.checkClear(layer_num_list, world_size, bottom_layers, bottom_layers_colors)
-    if dropping == True:
+    if dropping:
         initShape()
+        print("new shape")
     current_shape.checkBounds(world_size)
+    bottomlayers.checkClear(layer_num_list, world_size, bottom_layers, bottom_layers_colors)
     current_shape.displayShape(origins, scaling, current_u)
-    if current_shape.checkStop(bottom_layers, bottom_layers_colors,layer_num_list):
-        dropping = True
+    dropping = current_shape.checkStop(bottom_layers, bottom_layers_colors, dropping, layer_num_list)
+    
 
 def keyPressed():
     global current_shape, current_u
@@ -76,7 +77,6 @@ def keyPressed():
 
 def initShape():
     global current_shape, dropping, time_delta
-    print("new shape!")
     current_shape = shapeFunctions.Shape([int(world_size[0]/2), world_size[1], int(world_size[2]/2), world_size[3]], time_delta)
     dropping = False
 
