@@ -76,9 +76,9 @@ def keyPressed():
         'z': -1, 'x': 1
     }
     if str(key) in 'qawsed':
-        current_shape.transShape(*switcher.get(key))
+        current_shape.transShape(*switcher.get(key), bottom_layers=bottom_layers)
     if str(key) in 'rftgyhujikol':
-        current_shape.rotShape(*switcher.get(key))
+        current_shape.rotShape(*switcher.get(key), bottom_layers=bottom_layers)
     if str(key) in 'zx':
         current_u = [value + switcher.get(key) for value in current_u]
 
