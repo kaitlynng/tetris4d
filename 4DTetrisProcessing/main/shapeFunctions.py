@@ -45,7 +45,7 @@ class Shape:
 
     def rotShape(self, plane, direction, bottom_layers):
         temp_coor = rotate4D.rotate4D(self.shape_coor, plane, direction)
-        worldcoords = tuple((tuple(a+b for a,b in zip(j, self.pos_coor)) for j in temp_coor))
+        worldcoords = [list(a+b for a,b in zip(j, self.pos_coor)) for j in temp_coor]
         for coor in worldcoords:
             if coor in bottom_layers:
                 return
@@ -53,7 +53,7 @@ class Shape:
     
     def transShape(self, rotKey, direction, bottom_layers):
         temp_coor = translate4D.translate4D(self.pos_coor, rotKey, direction)
-        worldcoords = tuple((tuple(a+b for a,b in zip(j, temp_coor)) for j in self.shape_coor))
+        worldcoords = [list(a+b for a,b in zip(j, temp_coor)) for j in self.shape_coor]
         for coor in worldcoords:
             if coor in bottom_layers:
                 return
