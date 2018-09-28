@@ -76,20 +76,19 @@ class Shape:
                 min_coord +=1
                 
     def checkStop(self, bottom_layers, bottom_layers_colors):
-        worldcoords = [list(a+b for a,b in zip(j, self.pos_coor)) for j in self.shape_coor]
-        worldcoords_next = [coor for coor in worldcoords]
+        worldcoords = tuple((tuple(a+b for a,b in zip(j, self.pos_coor)) for j in self.shape_coor))
+        worldcoords_next = [list(coor) for coor in worldcoords]
         stop_shape = False
         for coor in worldcoords_next:
             coor[3] -= 1
             if coor in bottom_layers:
-                print("overlap")
-                print(coor)
                 stop_shape = True
                 break
-            if coor[3] <= 0:
+            if coor[3] <= -1:
                 stop_shape = True
                 break
         if stop_shape:
+            worldcoords = [list(coor) for coor in worldcoords]
             bottom_layers += worldcoords
             bottom_layers_colors += [self.shape_color for i in range(len(self.shape_coor))]
         else:

@@ -16,7 +16,7 @@ xuz_origin = [(screen_width/8)*3-(world_size[0]/2)*scaling, (screen_height/2)+(w
 xuy_origin = [(screen_width/8)*5-(world_size[0]/2)*scaling, (screen_height/2)+(world_size[2]/2)*scaling, 0]
 yuz_origin = [(screen_width/8)*7-(world_size[1]/2)*scaling, (screen_height/2)+(world_size[2]/2)*scaling, 0]
 origins = [xyz_origin, xuz_origin, xuy_origin, yuz_origin]
-time_delta = 0.5
+time_delta = 1
 
 dropping = True
 current_u = 0
