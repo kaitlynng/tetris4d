@@ -48,7 +48,9 @@ class Shape:
         worldcoords = [list(a+b for a,b in zip(j, self.pos_coor)) for j in temp_coor]
         for coor in worldcoords:
             if coor in bottom_layers:
+                print('bukeyi')
                 return
+        print('keyi')
         self.shape_coor = temp_coor[:]
     
     def transShape(self, rotKey, direction, bottom_layers):

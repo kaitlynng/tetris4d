@@ -81,6 +81,7 @@ def keyPressed():
         current_shape.rotShape(*switcher.get(key), bottom_layers=bottom_layers)
     if str(key) in 'zx':
         current_u = [value + switcher.get(key) for value in current_u]
+    
 
 def initShape():
     global current_shape, dropping, time_delta
