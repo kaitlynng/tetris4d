@@ -75,7 +75,7 @@ class Shape:
                 self.pos_coor = translate4D.translate4D(self.pos_coor, i, 1)
                 min_coord +=1
                 
-    def checkStop(self, bottom_layers, bottom_layers_colors):
+    def checkStop(self, bottom_layers, bottom_layers_colors,layer_num_list):
         worldcoords = tuple((tuple(a+b for a,b in zip(j, self.pos_coor)) for j in self.shape_coor))
         worldcoords_next = [list(coor) for coor in worldcoords]
         stop_shape = False
@@ -91,6 +91,8 @@ class Shape:
             worldcoords = [list(coor) for coor in worldcoords]
             bottom_layers += worldcoords
             bottom_layers_colors += [self.shape_color for i in range(len(self.shape_coor))]
+            for coor in worldcoords:
+                layer_num_list[coor[3]] += 1
         else:
             if time.time()-self.prev_time > self.time_delta:
                 self.transShape(3,-1)

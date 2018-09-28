@@ -5,10 +5,11 @@ import shapeFunctions
 import bottomlayers
 
 world_size = [5, 5, 5, 10] #x, y, z, u
-screen_width = 1800
+screen_width = 1400
 screen_height = 1000
 scaling = 50
 front_z = -500
+
 
 #axes defined by hor, ver, dep
 xyz_origin = [(screen_width/8)-(world_size[0]/2)*scaling, (screen_height/2)+(world_size[1]/2)*scaling, 0]
@@ -16,13 +17,14 @@ xuz_origin = [(screen_width/8)*3-(world_size[0]/2)*scaling, (screen_height/2)+(w
 xuy_origin = [(screen_width/8)*5-(world_size[0]/2)*scaling, (screen_height/2)+(world_size[2]/2)*scaling, 0]
 yuz_origin = [(screen_width/8)*7-(world_size[1]/2)*scaling, (screen_height/2)+(world_size[2]/2)*scaling, 0]
 origins = [xyz_origin, xuz_origin, xuy_origin, yuz_origin]
-time_delta = 1
+time_delta = 0.5
 
 dropping = True
 current_u = 0
 
 bottom_layers = []
 bottom_layers_colors = []
+layer_num_list = [0]*world_size[3]
 
 def setup():
     size(screen_width, screen_height, P3D)
@@ -35,11 +37,12 @@ def draw():
     camera(width/2, 0, (height/2)/tan(PI/6), width/2, height/2, 0, 0, 1, 0)
     drawBackground()
     bottomlayers.displayBottomLayers(bottom_layers, bottom_layers_colors, origins, scaling, current_u)
+    bottomlayers.checkClear(layer_num_list, world_size, bottom_layers, bottom_layers_colors)
     if dropping == True:
         initShape()
     current_shape.checkBounds(world_size)
     current_shape.displayShape(origins, scaling, current_u)
-    if current_shape.checkStop(bottom_layers, bottom_layers_colors):
+    if current_shape.checkStop(bottom_layers, bottom_layers_colors,layer_num_list):
         dropping = True
 
 def keyPressed():
