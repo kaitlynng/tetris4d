@@ -1,13 +1,8 @@
-
-shapes_list_color = [[30, 30, 30], [40, 40, 40], [50, 30, 100],
-                [200, 25, 40], [10, 40, 120], [40, 40, 150], [20, 10, 40]]
-
 def display_func2(world_coor, block_color, ax, origin, scaling):
     pushMatrix()
     translate(*origin)
     scale(1, -1, 1)
     
-
     for cube in world_coor:
         fill(*block_color[world_coor.index(cube)])
         stroke(255)
@@ -29,10 +24,6 @@ def displayBottomLayers(bottom_layers, bottom_layers_colors, origins, scaling, c
             if coor[3] == current_u:
                 xyz_cubes += [coor]
                 xyz_cubes_colors += [bottom_layers_colors[bottom_layers.index(coor)]]
-        #pos_coor_edit = []
-        #pos_coor_edit += self.pos_coor
-        #pos_coor_edit[1] = -pos_coor_edit[1]
-        #display_func(pos_coor_edit, xyz_cubes, axes[0], origins[0], scaling)
         display_func2(xyz_cubes, xyz_cubes_colors, axes[0], origins[0], scaling)
         
         for iter in range(1, len(axes)):

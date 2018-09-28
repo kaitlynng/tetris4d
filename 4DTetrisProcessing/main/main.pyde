@@ -62,7 +62,7 @@ def keyPressed():
         #YZ
         'o': [1, 1], 'l': [1, 0],
         #adjust u coordinate
-        'z': 1, 'x': -1
+        'z': -1, 'x': 1
     }
     if str(key) in 'qawsed':
         current_shape.transShape(*switcher.get(key))
