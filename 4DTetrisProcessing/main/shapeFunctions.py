@@ -43,26 +43,23 @@ class Shape:
         self.prev_time = 0
         self.time_delta = time_delta
 
-    def rotShape(self, plane, direction, bottom_layers):
+    def rotShape(self, plane, direction, bottom_layers, world_size):
         temp_coor = rotate4D.rotate4D(self.shape_coor, plane, direction)
         temp2_coor = self.pos_coor[:]
         worldcoords = [list(a+b for a,b in zip(j, temp2_coor)) for j in temp_coor]
         for i in range(4):
             min_coord = min([j[i] for j in worldcoords])
             max_coord = max([j[i] for j in worldcoords])
-            while max_coord >= worldSize[i]:
+            while max_coord >= world_size[i]:
                 temp2_coor = translate4D.translate4D(temp2_coor, i, -1)
                 max_coord -=1
             while min_coord < 0:
                 temp2_coor = translate4D.translate4D(temp2_coor, i, 1)
                 min_coord +=1
+        worldcoords = [list(a+b for a,b in zip(j, temp2_coor)) for j in temp_coor]
         for coor in worldcoords:
             if coor in bottom_layers:
-                print('bukeyi')
                 return
-        print(worldcoords)
-        print(bottom_layers)
-        print('keyi')
         self.shape_coor = temp_coor[:]
     
     def transShape(self, rotKey, direction, bottom_layers):
