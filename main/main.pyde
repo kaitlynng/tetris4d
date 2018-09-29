@@ -6,7 +6,7 @@ import time
 import translate4D
 import shapeFunctions
 import bottomlayers
-import button
+import widgets
 
 #-----------------------------------------------------------------------------------------
 # Init variables
@@ -45,12 +45,16 @@ bottom_layers = []
 bottom_layers_colors = []
 layer_num_list = [0]*world_size[3]
 
-gameplay = 2
-#0: start screen, 1: playing, 2: endgame
+gameplay = 0
+#0: start screen, 1: playing, 2: endgame, 3: pause game
 
 #screen stuff
-start_button = button.Button('PRESS SPACEBAR TO START', [screen_width/2, screen_height/2, 0], [600, 80])
-restart_button = button.Button('Press spacebar to play again, enter to return to start screen', [screen_width/2+200, 100, 0], [800, 50])
+start_button = widgets.Button('PRESS SPACEBAR TO START', [screen_width/2, screen_height/2, 0], [600, 80])
+restart_button = widgets.Button('Press spacebar to play again, enter to return to start screen', [screen_width/2+200, 100, 0], [800, 50])
+pause_list = widgets.Options(['Continue', 'End Game', 'Help Me'],
+                             [200, screen_height/2 + 100, 0],
+                             [400, 300], 0)
+help_me = False
 
 #-----------------------------------------------------------------------------------------
 # Screen functions
@@ -82,9 +86,18 @@ def playingScreen():
     #display
     current_shape.displayShape(origins, scaling, current_u)
     bottomlayers.displayBottomLayers(bottom_layers, bottom_layers_colors, origins, scaling, current_u)
-    
     endGame()
 
+def pauseScreen():
+    background(0)
+    textAlign(CENTER, CENTER)
+    textSize(100)
+    fill(255)
+    textMode(SCREEN)
+    text("GAME PAUSED", screen_width/2, screen_height/4, 0)
+    pause_list.display()
+    controls_table.display()
+        
 def endScreen():
     #end screen
     background(0)
@@ -99,7 +112,7 @@ def endScreen():
     text("You suck", screen_width-500, 200, 0)
     restart_button.display()
 
-screen_switcher = { 0: startScreen, 1: playingScreen, 2: endScreen }
+screen_switcher = { 0: startScreen, 1: playingScreen, 2: endScreen, 3: pauseScreen }
 
 #-----------------------------------------------------------------------------------------
 # Init game
@@ -114,7 +127,6 @@ def draw():
     screen_switcher.get(gameplay)()
 
 def keyPressed():
-    print(keyCode)
     #interactivity for moving shape
     global current_shape, current_u, gameplay
     shape_switcher = {
@@ -141,6 +153,8 @@ def keyPressed():
     if gameplay == 0:
         if key == ' ':
             gameplay = 1
+            return
+    
     if gameplay == 1:
         if str(key) in 'qawsed':
             current_shape.transShape(*shape_switcher.get(key), bottom_layers=bottom_layers)
@@ -153,12 +167,35 @@ def keyPressed():
         if str(key) in 'x':
             if current_u[2] < world_size[3]:
                 current_u = [value + shape_switcher.get(key) for value in current_u]
+        if key == ' ':
+            gameplay = 3
+            pause_list.select = 0
+            return
+    
     if gameplay == 2:
         if key == ' ':
-            gameplay = 1   
+            gameplay = 1
+            resetGame()
         if key == ENTER or key == RETURN:
             gameplay = 0 
-        
+            resetGame()
+            return
+    
+    if gameplay == 3:
+        if key == CODED:
+            if keyCode == DOWN:
+                pause_list.select += 1
+            if keyCode == UP:
+                pause_list.select -= 1
+            if pause_list.select < 0:
+                pause_list.select = 0
+            if pause_list.select >= len(pause_list.items):
+                pause_list.select = len(pause_list.items)-1
+        if key == ENTER or key == RETURN:
+            gameplay = (pause_list.select+1)*(pause_list.select in [0,1])+gameplay*(pause_list.select == 2)
+            if key == 2:
+                help_me = True
+
 #-----------------------------------------------------------------------------------------
 # Misc. functions
 #-----------------------------------------------------------------------------------------
@@ -177,6 +214,13 @@ def endGame():
         if coor[3] == world_size[3]-1:
             gameplay = 2
             return
+
+def resetGame():
+    global bottom_layers, bottom_layers_colors, current_u
+    bottom_layers = []
+    bottom_layers_colors = []
+    layer_num_list = [0]*world_size[3]
+    current_u = [0, 1, 2]
 
 #-----------------------------------------------------------------------------------------
 # Draw Axes
