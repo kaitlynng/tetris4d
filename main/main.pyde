@@ -34,13 +34,9 @@ xuy_origin = [(screen_width/8)*5-(world_size[0]/2)*scaling, (screen_height*3/4)+
 yuz_origin = [(screen_width/8)*7-(world_size[1]/2)*scaling, (screen_height*3/4)+(world_size[2]/2)*scaling, 0]
 origins = [xyz1_origin, xyz2_origin, xyz3_origin, xuz_origin, xuy_origin, yuz_origin]
 axes_names = [['X', 'Y', 'Z'], ['X', 'U', 'Z'], ['X', 'U', 'Y'], ['Y', 'U', 'Z']]
-<<<<<<< HEAD
-time_delta = 1.0
-=======
->>>>>>> e540829b21a6ced0a8538d3c7e8b9dc5d0f1d77c
 
 #variables for updating
-time_delta = 0.1
+time_delta = 1
 dropping = True
 current_u = [0, 1, 2]
 
@@ -49,19 +45,12 @@ bottom_layers = []
 bottom_layers_colors = []
 layer_num_list = [0]*world_size[3]
 
-<<<<<<< HEAD
+
 #variables for end screen
-selecting_options = True
-gameplay = False
-endscreen = False
-endgame_coor = [random.random()*screen_width, random.random()*screen_height, random.random()*500]
-endgame_prevtime = 0
-=======
 gameplay = 0
 #0: start screen, 1: playing, 2: endgame, 3: pause game
 
 #screen stuff
-start_button = widgets.Button('PRESS SPACEBAR TO START', [screen_width/2, screen_height/2, 0], [600, 80])
 restart_button = widgets.Button('Press spacebar to play again, enter to return to start screen', [screen_width/2+200, 100, 0], [800, 50])
 pause_list = widgets.Options(['Continue', 'End Game', 'Help Me'],
                              [200, screen_height/2 + 100, 0],
@@ -74,11 +63,23 @@ help_me = False
 
 def startScreen():
     background(0)
-    textAlign(CENTER, CENTER)
+    camera(screen_width/2, height*5/6, (height/2)/tan(PI/6)*1.1, width/2, height*2/3, 0, 0, 1, 0)
+    rotateX(-PI/5)
+    drawBackground()
     textSize(100)
-    fill(255)
-    text("Tetris 4D", screen_width/2, screen_height/4, 0)
-    start_button.display()
+    textAlign(CENTER)
+    fill(255,255,255)
+    text("Difficulty: %.2f"%(2/time_delta), 0.5*screen_width, 0.3*screen_height, 0)
+    textSize(20)
+    textAlign(CENTER)
+    fill(255,255,255)
+    text("""spacebar to start; a,d to change difficulty (2.0 is recommended your for first game")
+            Movement                                Rotation                       
+                        Keys  Axis                Keys  Rotation plane      Keys  Rotation plane
+                W, S  Z-axis              R, F  X-U plane              T, G  Y-U plane
+                Q, E  Y-axis              Y, H  Z-U plane              U, J  X-Z plane
+                A, D  X-axis              I, K  X-Y plane              O, L  Y-Z plane
+        """, 0.5*screen_width, 0.05*screen_height, 0)
 
 def playingScreen():
     global dropping
@@ -108,7 +109,6 @@ def pauseScreen():
     textMode(SCREEN)
     text("GAME PAUSED", screen_width/2, screen_height/4, 0)
     pause_list.display()
-    controls_table.display()
         
 def endScreen():
     #end screen
@@ -129,126 +129,19 @@ screen_switcher = { 0: startScreen, 1: playingScreen, 2: endScreen, 3: pauseScre
 #-----------------------------------------------------------------------------------------
 # Init game
 #-----------------------------------------------------------------------------------------
->>>>>>> e540829b21a6ced0a8538d3c7e8b9dc5d0f1d77c
-
 def setup():
     size(screen_width, screen_height, P3D)
-    translate(0, 0, front_z)
+    translate(0,0,front_z)
     draw()
 
 def draw():
-<<<<<<< HEAD
-    global dropping, selecting_options, endgame_coor, endgame_prevtime
-    if selecting_options:
-        background(0)
-        camera(screen_width/2, height*5/6, (height/2)/tan(PI/6)*1.1, width/2, height*2/3, 0, 0, 1, 0)
-        rotateX(-PI/5)
-        drawBackground()
-        textSize(100)
-        textAlign(CENTER)
-        fill(255,255,255)
-        text("Difficulty: %.1f"%time_delta, 0.5*screen_width, 0.3*screen_height, 0)
-        textSize(20)
-        textAlign(CENTER)
-        fill(255,255,255)
-        text("""spacebar to start; a,d to change difficulty (2.0 is recommended your for first game")
-                Movement                                Rotation                       
-                            Keys  Axis                Keys  Rotation plane      Keys  Rotation plane
-                    W, S  Z-axis              R, F  X-U plane              T, G  Y-U plane
-                    Q, E  Y-axis              Y, H  Z-U plane              U, J  X-Z plane
-                    A, D  X-axis              I, K  X-Y plane              O, L  Y-Z plane
-             """, 0.5*screen_width, 0.05*screen_height, 0)
-    elif gameplay:
-        #environment
-        background(0)
-        camera(screen_width/2, height*5/6, (height/2)/tan(PI/6)*1.1, width/2, height*2/3, 0, 0, 1, 0)
-        rotateX(-PI/5)
-        drawBackground()
-        
-        #updating
-        if dropping:
-            initShape()
-        current_shape.checkBounds(world_size)
-        bottomlayers.checkClear(layer_num_list, world_size, bottom_layers, bottom_layers_colors)
-        dropping = current_shape.checkStop(bottom_layers, bottom_layers_colors, dropping, layer_num_list)
-        
-        #display
-        current_shape.displayShape(origins, scaling, current_u)
-        bottomlayers.displayBottomLayers(bottom_layers, bottom_layers_colors, origins, scaling, current_u)
-        
-        endGame()
-
-    elif endscreen:
-        #end screen
-        background(0)
-        camera(screen_width/2, height*5/6, (height/2)/tan(PI/6)*1.1, width/2, height*2/3, 0, 0, 1, 0)
-        rotateX(-PI/5)
-        drawBackground()
-        bottomlayers.displayBottomLayers(bottom_layers, bottom_layers_colors, origins, scaling, current_u)
-        textSize(100)
-        textAlign(CENTER)
-        fill(*[random.random()*255 for i in range(3)])
-        text("You suck", *endgame_coor)
-        if time.time() - endgame_prevtime > 1:
-            endgame_coor = [random.random()*screen_width, random.random()*screen_height, random.random()*200+100]
-            endgame_prevtime = time.time()
-
-def keyPressed():
-    #interactivity for moving shape
-    global current_shape, current_u,gameplay, selecting_options
-    if selecting_options:
-        switcher = {
-            'a': -0.1,
-            'd': 0.1,
-            ' ': 0
-            
-        }
-        if str(key) in 'ad':
-            change_difficulty(switcher.get(key))
-        if str(key) in ' ':
-            selecting_options = False
-            gameplay = True
-            
-    if gameplay:
-        switcher = {
-            #Translations
-            'q': [1,1], 'a': [0,-1], 
-            'w': [2,-1], 's': [2,1], 
-            'e': [1,-1], 'd': [0,1],
-            #Rotations
-            #XU
-            'r': [3, 1], 'f': [3, 0],
-            #YU
-            't': [4, 1], 'g': [4, 0],
-            #ZU
-            'y': [5, 1], 'h': [5, 0],
-            #XY
-            'i': [0, 1], 'k': [0, 0],
-            #XZ
-            'u': [2, 1], 'j': [2, 0],
-            #YZ
-            'o': [1, 1], 'l': [1, 0],
-            #Adjust U coordinate
-            'z': -1, 'x': 1
-        }
-        if str(key) in 'qawsed':
-            current_shape.transShape(*switcher.get(key), bottom_layers=bottom_layers)
-        if str(key) in 'rftgyhujikol':
-            current_shape.rotShape(*switcher.get(key), bottom_layers=bottom_layers, world_size=world_size)
-        if str(key) in 'z':
-            if current_u[0] > 0:
-                current_u = [value + switcher.get(key) for value in current_u]
-        if str(key) in 'x':
-            if current_u[2] < world_size[3]:
-                current_u = [value + switcher.get(key) for value in current_u]
+    screen_switcher.get(gameplay)()
     
 def change_difficulty(option):
     global time_delta
     print(time_delta)
     time_delta += option
 
-=======
-    screen_switcher.get(gameplay)()
 
 def keyPressed():
     #interactivity for moving shape
@@ -275,9 +168,16 @@ def keyPressed():
         'z': -1, 'x': 1
     }
     if gameplay == 0:
-        if key == ' ':
+        switcher = {
+            'a': -0.1,
+            'd': 0.1,
+            ' ': 0
+            
+        }
+        if str(key) in 'ad':
+            change_difficulty(switcher.get(key))
+        if str(key) in ' ':
             gameplay = 1
-            return
     
     if gameplay == 1:
         if str(key) in 'qawsed':
@@ -323,7 +223,6 @@ def keyPressed():
 #-----------------------------------------------------------------------------------------
 # Misc. functions
 #-----------------------------------------------------------------------------------------
->>>>>>> e540829b21a6ced0a8538d3c7e8b9dc5d0f1d77c
 
 def initShape():
     #initialises new moving shape
@@ -337,12 +236,7 @@ def endGame():
     global gameplay,endscreen
     for coor in bottom_layers:
         if coor[3] == world_size[3]-1:
-<<<<<<< HEAD
-            gameplay = False
-            endscreen = True
-=======
             gameplay = 2
->>>>>>> e540829b21a6ced0a8538d3c7e8b9dc5d0f1d77c
             return
 
 def resetGame():
