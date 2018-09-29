@@ -27,9 +27,9 @@ class Options:
         self.coor = list_coor
         self.dim = list_dim
         self.select = select
+        self.select_pad = list_dim[0]/(len(list_items)*5)
         self.text_padding = 20
-        self.text_height = (self.dim[1]+self.text_padding)/len(self.items)-self.text_padding
-        self.text_size = self.text_height/2
+        self.text_size = self.dim[1]/2
         self.text_color = 255
     
     def display(self):
@@ -39,11 +39,11 @@ class Options:
         textAlign(LEFT, CENTER)
         textSize(self.text_size)
         for i in range(len(self.items)):
-            text(self.items[i], -self.dim[0]/2+self.dim[0]/5*2, -self.dim[1]/2 + (self.text_height+self.text_padding)*i + self.text_height/2, 0)
-        text('>', -self.dim[0]/2, -self.dim[1]/2 + (self.text_height+self.text_padding)*self.select + self.text_height/2, 0)
-        
+            text(self.items[i], -self.dim[0]/2 + self.select_pad*(i*5+1), -self.dim[1]/2, 0)
+        text('>', -self.dim[0]/2 + self.select_pad*self.select*5, -self.dim[1]/2, 0)
         popMatrix()
-        
+     
+'''
 class Controls():
     def __init__(self, disp_coor, disp_dim):
         self.coor = disp_coor
@@ -84,3 +84,4 @@ class Controls():
         fill(self.text_color)
         text(label, self.cell_dim[0]/2*cell_span[0], self.cell_dim[1]/2*cell_span[1], 0)
         popMatrix()
+'''

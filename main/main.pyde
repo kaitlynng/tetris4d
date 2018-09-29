@@ -53,9 +53,9 @@ gameplay = 0
 #screen stuff
 restart_button = widgets.Button('Press spacebar to play again, enter to return to start screen', [screen_width/2+200, 100, 0], [800, 50])
 pause_list = widgets.Options(['Continue', 'End Game', 'Help Me'],
-                             [200, screen_height/2 + 100, 0],
-                             [400, 300], 0)
-help_me = False
+                             [screen_width*0.6, screen_height*0.32, 0],
+                             [900, 80], 0)
+helpme_u = 0
 
 #-----------------------------------------------------------------------------------------
 # Screen functions
@@ -66,7 +66,7 @@ def startScreen():
     camera(screen_width/2, height*5/6, (height/2)/tan(PI/6)*1.1, width/2, height*2/3, 0, 0, 1, 0)
     rotateX(-PI/5)
     drawBackground()
-    textSize(100)
+    textSize(80)
     textAlign(CENTER)
     fill(255,255,255)
     text("Difficulty: %.2f"%(2/time_delta), 0.5*screen_width, 0.3*screen_height, 0)
@@ -79,8 +79,8 @@ def startScreen():
                 W, S  Z-axis              R, F  X-U plane              T, G  Y-U plane
                 Q, E  Y-axis              Y, H  Z-U plane              U, J  X-Z plane
                 A, D  X-axis              I, K  X-Y plane              O, L  Y-Z plane
-        """, 0.5*screen_width, 0.05*screen_height, 0)
-
+        """, 0.5*screen_width, 0.06*screen_height, 0)
+    
 def playingScreen():
     global dropping
     #environment
@@ -88,6 +88,10 @@ def playingScreen():
     camera(screen_width/2, height*5/6, (height/2)/tan(PI/6)*1.1, width/2, height*2/3, 0, 0, 1, 0)
     rotateX(-PI/5)
     drawBackground()
+    textSize(40)
+    fill(210)
+    textAlign(CENTER)
+    text("Press spacebar to pause", 0.45*screen_width, 0.3*screen_height, 0)
     
     #updating
     if dropping:
@@ -103,12 +107,26 @@ def playingScreen():
 
 def pauseScreen():
     background(0)
-    textAlign(CENTER, CENTER)
-    textSize(100)
-    fill(255)
-    textMode(SCREEN)
-    text("GAME PAUSED", screen_width/2, screen_height/4, 0)
+    camera(screen_width/2, height*5/6, (height/2)/tan(PI/6)*1.1, width/2, height*2/3, 0, 0, 1, 0)
+    rotateX(-PI/5)
+    drawBackground()
+    bottomlayers.displayBottomLayers(bottom_layers, bottom_layers_colors, origins, scaling, current_u)
+    current_shape.displayShape(origins, scaling, current_u)
+    textSize(120)
+    textAlign(CENTER)
+    fill(215)
+    text("PAUSED", 0.95*screen_width, 0.2*screen_height, 0)
     pause_list.display()
+    textSize(20)
+    textAlign(CENTER)
+    fill(255,255,255)
+    text("""Spacebar to select. Choose 'Help Me' to clear an xyz space
+            Movement                                Rotation                       
+                        Keys  Axis                Keys  Rotation plane      Keys  Rotation plane
+                W, S  Z-axis              R, F  X-U plane              T, G  Y-U plane
+                Q, E  Y-axis              Y, H  Z-U plane              U, J  X-Z plane
+                A, D  X-axis              I, K  X-Y plane              O, L  Y-Z plane
+        """, 0.5*screen_width, 0.06*screen_height, 0)
         
 def endScreen():
     #end screen
@@ -124,7 +142,32 @@ def endScreen():
     text("You suck", screen_width-500, 200, 0)
     restart_button.display()
 
-screen_switcher = { 0: startScreen, 1: playingScreen, 2: endScreen, 3: pauseScreen }
+def helpMeScreen():
+    background(0)
+    camera(screen_width/2, height*5/6, (height/2)/tan(PI/6)*1.1, width/2, height*2/3, 0, 0, 1, 0)
+    rotateX(-PI/5)
+    drawBackground()
+    bottomlayers.displayBottomLayers(bottom_layers, bottom_layers_colors, origins, scaling, current_u)
+    current_shape.displayShape(origins, scaling, current_u)
+    textSize(120)
+    textAlign(CENTER)
+    fill(215)
+    text("PAUSED", 0.95*screen_width, 0.2*screen_height, 0)
+    textSize(40)
+    fill(255)
+    text("Clear XYZ-plane of U =    <  %d  >" %helpme_u, screen_width*0.6, screen_height*0.3, 0)
+    textSize(20)
+    textAlign(CENTER)
+    fill(255,255,255)
+    text("""Choose U with a and d. Spacebar to clear, Backspace/Delete to cancel.
+            Movement                                Rotation                       
+                        Keys  Axis                Keys  Rotation plane      Keys  Rotation plane
+                W, S  Z-axis              R, F  X-U plane              T, G  Y-U plane
+                Q, E  Y-axis              Y, H  Z-U plane              U, J  X-Z plane
+                A, D  X-axis              I, K  X-Y plane              O, L  Y-Z plane
+        """, 0.5*screen_width, 0.06*screen_height, 0)
+    
+screen_switcher = { 0: startScreen, 1: playingScreen, 2: endScreen, 3: pauseScreen, 4: helpMeScreen }
 
 #-----------------------------------------------------------------------------------------
 # Init game
@@ -136,16 +179,10 @@ def setup():
 
 def draw():
     screen_switcher.get(gameplay)()
-    
-def change_difficulty(option):
-    global time_delta
-    print(time_delta)
-    time_delta += option
-
 
 def keyPressed():
     #interactivity for moving shape
-    global current_shape, current_u, gameplay
+    global current_shape, current_u, helpme_u, gameplay
     shape_switcher = {
         #Translations
         'q': [1,1], 'a': [0,-1], 
@@ -169,28 +206,21 @@ def keyPressed():
     }
     if gameplay == 0:
         switcher = {
-            'a': -0.1,
-            'd': 0.1,
+            'a': 0.1,
+            'd': -0.1,
             ' ': 0
-            
         }
         if str(key) in 'ad':
             change_difficulty(switcher.get(key))
         if str(key) in ' ':
             gameplay = 1
+            return
     
     if gameplay == 1:
         if str(key) in 'qawsed':
             current_shape.transShape(*shape_switcher.get(key), bottom_layers=bottom_layers)
         if str(key) in 'rftgyhujikol':
             current_shape.rotShape(*shape_switcher.get(key), bottom_layers=bottom_layers, world_size=world_size)
-        if str(key) in 'z':
-            if current_u[0] > 0:
-                current_u = [value + shape_switcher.get(key) for value in current_u]
-                print(current_u)
-        if str(key) in 'x':
-            if current_u[2] < world_size[3]:
-                current_u = [value + shape_switcher.get(key) for value in current_u]
         if key == ' ':
             gameplay = 3
             pause_list.select = 0
@@ -206,23 +236,48 @@ def keyPressed():
             return
     
     if gameplay == 3:
-        if key == CODED:
-            if keyCode == DOWN:
-                pause_list.select += 1
-            if keyCode == UP:
-                pause_list.select -= 1
-            if pause_list.select < 0:
-                pause_list.select = 0
-            if pause_list.select >= len(pause_list.items):
-                pause_list.select = len(pause_list.items)-1
-        if key == ENTER or key == RETURN:
+        if str(key) in 'z':
+            if current_u[0] > 0:
+                current_u = [value + shape_switcher.get(key) for value in current_u]
+        if str(key) in 'x':
+            if current_u[2] < world_size[3]:
+                current_u = [value + shape_switcher.get(key) for value in current_u]
+        if key == 'a':
+            pause_list.select -= 1
+        if key == 'd':
+            pause_list.select += 1
+        if pause_list.select < 0:
+            pause_list.select = 0
+        if pause_list.select >= len(pause_list.items):
+            pause_list.select = len(pause_list.items)-1
+        if key == ' ':
             gameplay = (pause_list.select+1)*(pause_list.select in [0,1])+gameplay*(pause_list.select == 2)
-            if key == 2:
-                help_me = True
+            if pause_list.select == 2:
+                gameplay = 4
+                return
+    
+    if gameplay == 4:
+        if key == 'a':
+            helpme_u -= 1
+        if key == 'd':
+            helpme_u += 1
+        if helpme_u < 0:
+            helpme_u = 0
+        if helpme_u >= world_size[3]:
+            helpme_u = world_size[3]-1
+        if key == BACKSPACE or key == DELETE:
+            gameplay = 3
+        if key == ' ':
+            helpMe()
+            return
 
 #-----------------------------------------------------------------------------------------
 # Misc. functions
 #-----------------------------------------------------------------------------------------
+   
+def change_difficulty(option):
+    global time_delta
+    time_delta += option
 
 def initShape():
     #initialises new moving shape
@@ -245,6 +300,21 @@ def resetGame():
     bottom_layers_colors = []
     layer_num_list = [0]*world_size[3]
     current_u = [0, 1, 2]
+
+def helpMe():
+    global bottom_layers, bottom_layers_colors
+    temp_coor = []
+    temp_colors = []
+    for i in range(len(bottom_layers)):
+        if bottom_layers[i][3] != helpme_u:
+            temp_coor += [bottom_layers[i]]
+            temp_colors += [bottom_layers_colors[i]]
+    bottom_layers = [coor for coor in temp_coor]
+    bottom_layers_colors = [colors for colors in temp_colors]
+    print(bottom_layers)
+    print(bottom_layers_colors)
+            
+            
 
 #-----------------------------------------------------------------------------------------
 # Draw Axes
