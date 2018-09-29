@@ -36,7 +36,7 @@ origins = [xyz1_origin, xyz2_origin, xyz3_origin, xuz_origin, xuy_origin, yuz_or
 axes_names = [['X', 'Y', 'Z'], ['X', 'U', 'Z'], ['X', 'U', 'Y'], ['Y', 'U', 'Z']]
 
 #variables for updating
-time_delta = 0.1
+time_delta = 1
 dropping = True
 current_u = [0, 1, 2]
 
@@ -45,11 +45,12 @@ bottom_layers = []
 bottom_layers_colors = []
 layer_num_list = [0]*world_size[3]
 
+
+#variables for end screen
 gameplay = 0
 #0: start screen, 1: playing, 2: endgame, 3: pause game
 
 #screen stuff
-start_button = widgets.Button('PRESS SPACEBAR TO START', [screen_width/2, screen_height/2, 0], [600, 80])
 restart_button = widgets.Button('Press spacebar to play again, enter to return to start screen', [screen_width/2+200, 100, 0], [800, 50])
 pause_list = widgets.Options(['Continue', 'End Game', 'Help Me'],
                              [200, screen_height/2 + 100, 0],
@@ -62,11 +63,23 @@ help_me = False
 
 def startScreen():
     background(0)
-    textAlign(CENTER, CENTER)
+    camera(screen_width/2, height*5/6, (height/2)/tan(PI/6)*1.1, width/2, height*2/3, 0, 0, 1, 0)
+    rotateX(-PI/5)
+    drawBackground()
     textSize(100)
-    fill(255)
-    text("Tetris 4D", screen_width/2, screen_height/4, 0)
-    start_button.display()
+    textAlign(CENTER)
+    fill(255,255,255)
+    text("Difficulty: %.2f"%(2/time_delta), 0.5*screen_width, 0.3*screen_height, 0)
+    textSize(20)
+    textAlign(CENTER)
+    fill(255,255,255)
+    text("""spacebar to start; a,d to change difficulty (2.0 is recommended your for first game")
+            Movement                                Rotation                       
+                        Keys  Axis                Keys  Rotation plane      Keys  Rotation plane
+                W, S  Z-axis              R, F  X-U plane              T, G  Y-U plane
+                Q, E  Y-axis              Y, H  Z-U plane              U, J  X-Z plane
+                A, D  X-axis              I, K  X-Y plane              O, L  Y-Z plane
+        """, 0.5*screen_width, 0.05*screen_height, 0)
 
 def playingScreen():
     global dropping
@@ -116,14 +129,19 @@ screen_switcher = { 0: startScreen, 1: playingScreen, 2: endScreen, 3: pauseScre
 #-----------------------------------------------------------------------------------------
 # Init game
 #-----------------------------------------------------------------------------------------
-
 def setup():
     size(screen_width, screen_height, P3D)
-    translate(0, 0, front_z)
+    translate(0,0,front_z)
     draw()
 
 def draw():
     screen_switcher.get(gameplay)()
+    
+def change_difficulty(option):
+    global time_delta
+    print(time_delta)
+    time_delta += option
+
 
 def keyPressed():
     #interactivity for moving shape
@@ -150,9 +168,16 @@ def keyPressed():
         'z': -1, 'x': 1
     }
     if gameplay == 0:
-        if key == ' ':
+        switcher = {
+            'a': -0.1,
+            'd': 0.1,
+            ' ': 0
+            
+        }
+        if str(key) in 'ad':
+            change_difficulty(switcher.get(key))
+        if str(key) in ' ':
             gameplay = 1
-            return
     
     if gameplay == 1:
         if str(key) in 'qawsed':
@@ -208,7 +233,7 @@ def initShape():
 
 def endGame():
     #Condition for ending the game
-    global gameplay
+    global gameplay,endscreen
     for coor in bottom_layers:
         if coor[3] == world_size[3]-1:
             gameplay = 2
