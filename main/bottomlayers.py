@@ -46,7 +46,7 @@ def displayBottomLayers(bottom_layers, bottom_layers_colors, origins, scaling, c
         for iter in range(1, len(axes)):
             display_func2(bottom_layers, bottom_layers_colors, axes[iter], origins[iter+2], scaling)
 
-def checkClear(layer_num_list, world_size, bottom_layers, bottom_layers_colors):
+def checkClear(layer_num_list, world_size, bottom_layers, bottom_layers_colors, score):
     #layer_num_list tracks the cummulative number of blocks in each u-coordinate space
     #bottom_layers tracks the positions of the fixed cubes
     
@@ -55,6 +55,7 @@ def checkClear(layer_num_list, world_size, bottom_layers, bottom_layers_colors):
     
     for iter in range(len(layer_num_list)):
         if layer_num_list[iter] >= layermax:
+            score += 1
             #edit layer_num_list
             for i in range(iter,len(layer_num_list)-1):
                 layer_num_list[i] = layer_num_list[i+1]

@@ -83,7 +83,7 @@ def startScreen():
         """, 0.5*screen_width, 0.06*screen_height, 0)
     
 def playingScreen():
-    global dropping
+    global dropping, score
     #environment
     background(0)
     camera(screen_width/2, height*5/6, (height/2)/tan(PI/6)*1.1, width/2, height*2/3, 0, 0, 1, 0)
@@ -98,7 +98,7 @@ def playingScreen():
     if dropping:
         initShape()
     current_shape.checkBounds(world_size)
-    bottomlayers.checkClear(layer_num_list, world_size, bottom_layers, bottom_layers_colors)
+    bottomlayers.checkClear(layer_num_list, world_size, bottom_layers, bottom_layers_colors, score)
     dropping = current_shape.checkStop(bottom_layers, bottom_layers_colors, dropping, layer_num_list)
     
     #display
@@ -308,6 +308,7 @@ def resetGame():
     current_u = [0, 1, 2]
     clear_count = 0
     score = 0
+    dropping = True
 
 def helpMe():
     global bottom_layers, bottom_layers_colors, clear_count
