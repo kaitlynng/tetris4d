@@ -321,8 +321,6 @@ def helpMe():
     clear_count += 1*(len(temp_coor) < len(bottom_layers))
     bottom_layers = [coor for coor in temp_coor]
     bottom_layers_colors = [colors for colors in temp_colors]
-    print(bottom_layers)
-    print(bottom_layers_colors)
             
             
 
