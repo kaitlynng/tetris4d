@@ -132,6 +132,7 @@ def pauseScreen():
         
 def endScreen():
     #end screen
+    global score
     background(0)
     camera(screen_width/2, height*5/6, (height/2)/tan(PI/6)*1.1, width/2, height*2/3, 0, 0, 1, 0)
     rotateX(-PI/5)
