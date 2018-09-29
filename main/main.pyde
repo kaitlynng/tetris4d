@@ -51,12 +51,13 @@ gameplay = 0
 #0: start screen, 1: playing, 2: endgame, 3: pause game
 
 #screen stuff
-restart_button = widgets.Button('Press spacebar to play again, enter to return to start screen', [screen_width/2+200, 100, 0], [800, 50])
+restart_button = widgets.Button('Press spacebar to play again, enter to return to start screen', [screen_width*0.6, screen_height*0.1, 0], [800, 50])
 pause_list = widgets.Options(['Continue', 'End Game', 'Help Me'],
                              [screen_width*0.6, screen_height*0.32, 0],
                              [900, 80], 0)
 helpme_u = 0
-
+score = 0
+clear_count = 0
 #-----------------------------------------------------------------------------------------
 # Screen functions
 #-----------------------------------------------------------------------------------------
@@ -135,12 +136,19 @@ def endScreen():
     rotateX(-PI/5)
     drawBackground()
     bottomlayers.displayBottomLayers(bottom_layers, bottom_layers_colors, origins, scaling, current_u)
-    textSize(200)
+    textSize(150)
     textAlign(CENTER, CENTER)
     fill(*[random.random()*255 for i in range(3)])
     textMode(SCREEN)
-    text("You suck", screen_width-500, 200, 0)
+    text("You suck", 0.5*screen_width, 0.2*screen_height, 0)
     restart_button.display()
+    textSize(35)
+    fill(255)
+    text("""
+         Score:        {}
+         Clear count:  {}
+         Final score:  {}
+         """.format(score, clear_count, score-clear_count), 0.82*screen_width, 0.22*screen_height, 0)
 
 def helpMeScreen():
     background(0)
@@ -155,7 +163,7 @@ def helpMeScreen():
     text("PAUSED", 0.95*screen_width, 0.2*screen_height, 0)
     textSize(40)
     fill(255)
-    text("Clear XYZ-plane of U =    <  %d  >" %helpme_u, screen_width*0.6, screen_height*0.3, 0)
+    text("Clear XYZ-plane of U =    <  {}  >   Clear count: {}".format(helpme_u, clear_count), screen_width*0.6, screen_height*0.3, 0)
     textSize(20)
     textAlign(CENTER)
     fill(255,255,255)
@@ -201,7 +209,7 @@ def keyPressed():
         'u': [2, 1], 'j': [2, 0],
         #YZ
         'o': [1, 1], 'l': [1, 0],
-        #Adjust U coordinate
+        #switch U
         'z': -1, 'x': 1
     }
     if gameplay == 0:
@@ -215,6 +223,14 @@ def keyPressed():
         if str(key) in ' ':
             gameplay = 1
             return
+    
+    if gameplay in [1,2,3,4]:
+        if key == 'z':
+            if current_u[0] > 0:
+                current_u = [value + shape_switcher.get(key) for value in current_u]
+        if key == 'x':
+            if current_u[2] < world_size[3]:
+                current_u = [value + shape_switcher.get(key) for value in current_u]
     
     if gameplay == 1:
         if str(key) in 'qawsed':
@@ -236,20 +252,12 @@ def keyPressed():
             return
     
     if gameplay == 3:
-        if str(key) in 'z':
-            if current_u[0] > 0:
-                current_u = [value + shape_switcher.get(key) for value in current_u]
-        if str(key) in 'x':
-            if current_u[2] < world_size[3]:
-                current_u = [value + shape_switcher.get(key) for value in current_u]
         if key == 'a':
-            pause_list.select -= 1
+            if pause_list.select > 0:
+                pause_list.select -= 1
         if key == 'd':
-            pause_list.select += 1
-        if pause_list.select < 0:
-            pause_list.select = 0
-        if pause_list.select >= len(pause_list.items):
-            pause_list.select = len(pause_list.items)-1
+            if pause_list.select < len(pause_list.items):
+                pause_list.select += 1
         if key == ' ':
             gameplay = (pause_list.select+1)*(pause_list.select in [0,1])+gameplay*(pause_list.select == 2)
             if pause_list.select == 2:
@@ -258,13 +266,11 @@ def keyPressed():
     
     if gameplay == 4:
         if key == 'a':
-            helpme_u -= 1
+            if helpme_u > 0:
+                helpme_u -= 1
         if key == 'd':
-            helpme_u += 1
-        if helpme_u < 0:
-            helpme_u = 0
-        if helpme_u >= world_size[3]:
-            helpme_u = world_size[3]-1
+            if helpme_u < world_size[3]:
+                helpme_u += 1
         if key == BACKSPACE or key == DELETE:
             gameplay = 3
         if key == ' ':
@@ -300,15 +306,18 @@ def resetGame():
     bottom_layers_colors = []
     layer_num_list = [0]*world_size[3]
     current_u = [0, 1, 2]
+    clear_count = 0
+    score = 0
 
 def helpMe():
-    global bottom_layers, bottom_layers_colors
+    global bottom_layers, bottom_layers_colors, clear_count
     temp_coor = []
     temp_colors = []
     for i in range(len(bottom_layers)):
         if bottom_layers[i][3] != helpme_u:
             temp_coor += [bottom_layers[i]]
             temp_colors += [bottom_layers_colors[i]]
+    clear_count += 1*(len(temp_coor) < len(bottom_layers))
     bottom_layers = [coor for coor in temp_coor]
     bottom_layers_colors = [colors for colors in temp_colors]
     print(bottom_layers)
