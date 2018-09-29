@@ -1,18 +1,25 @@
 from matmul import *
 from rotate4D import *
-import translate4D
-import shapeFunctions
-import bottomlayers
 import random
 import time
 
-#variables for initialising environment
+import translate4D
+import shapeFunctions
+import bottomlayers
+import button
+
+#-----------------------------------------------------------------------------------------
+# Init variables
+#-----------------------------------------------------------------------------------------
+
+#environment variables
 world_size = [5, 5, 5, 10] #x, y, z, u
 screen_width = 1400
 screen_height = 1000
 scaling = 50
 front_z = -500
 
+#drawing
 grid_stroke = 255
 axes_name_size = 50
 axes_name_color = 255
@@ -27,9 +34,9 @@ xuy_origin = [(screen_width/8)*5-(world_size[0]/2)*scaling, (screen_height*3/4)+
 yuz_origin = [(screen_width/8)*7-(world_size[1]/2)*scaling, (screen_height*3/4)+(world_size[2]/2)*scaling, 0]
 origins = [xyz1_origin, xyz2_origin, xyz3_origin, xuz_origin, xuy_origin, yuz_origin]
 axes_names = [['X', 'Y', 'Z'], ['X', 'U', 'Z'], ['X', 'U', 'Y'], ['Y', 'U', 'Z']]
-time_delta = 1
 
 #variables for updating
+time_delta = 0.1
 dropping = True
 current_u = [0, 1, 2]
 
@@ -38,10 +45,65 @@ bottom_layers = []
 bottom_layers_colors = []
 layer_num_list = [0]*world_size[3]
 
-#variables for end screen
-gameplay = True
-endgame_coor = [random.random()*screen_width, random.random()*screen_height, random.random()*500]
-endgame_prevtime = 0
+gameplay = 2
+#0: start screen, 1: playing, 2: endgame
+
+#screen stuff
+start_button = button.Button('PRESS SPACEBAR TO START', [screen_width/2, screen_height/2, 0], [600, 80])
+restart_button = button.Button('Press spacebar to play again, enter to return to start screen', [screen_width/2+200, 100, 0], [800, 50])
+
+#-----------------------------------------------------------------------------------------
+# Screen functions
+#-----------------------------------------------------------------------------------------
+
+def startScreen():
+    background(0)
+    textAlign(CENTER, CENTER)
+    textSize(100)
+    fill(255)
+    text("Tetris 4D", screen_width/2, screen_height/4, 0)
+    start_button.display()
+
+def playingScreen():
+    global dropping
+    #environment
+    background(0)
+    camera(screen_width/2, height*5/6, (height/2)/tan(PI/6)*1.1, width/2, height*2/3, 0, 0, 1, 0)
+    rotateX(-PI/5)
+    drawBackground()
+    
+    #updating
+    if dropping:
+        initShape()
+    current_shape.checkBounds(world_size)
+    bottomlayers.checkClear(layer_num_list, world_size, bottom_layers, bottom_layers_colors)
+    dropping = current_shape.checkStop(bottom_layers, bottom_layers_colors, dropping, layer_num_list)
+    
+    #display
+    current_shape.displayShape(origins, scaling, current_u)
+    bottomlayers.displayBottomLayers(bottom_layers, bottom_layers_colors, origins, scaling, current_u)
+    
+    endGame()
+
+def endScreen():
+    #end screen
+    background(0)
+    camera(screen_width/2, height*5/6, (height/2)/tan(PI/6)*1.1, width/2, height*2/3, 0, 0, 1, 0)
+    rotateX(-PI/5)
+    drawBackground()
+    bottomlayers.displayBottomLayers(bottom_layers, bottom_layers_colors, origins, scaling, current_u)
+    textSize(200)
+    textAlign(CENTER, CENTER)
+    fill(*[random.random()*255 for i in range(3)])
+    textMode(SCREEN)
+    text("You suck", screen_width-500, 200, 0)
+    restart_button.display()
+
+screen_switcher = { 0: startScreen, 1: playingScreen, 2: endScreen }
+
+#-----------------------------------------------------------------------------------------
+# Init game
+#-----------------------------------------------------------------------------------------
 
 def setup():
     size(screen_width, screen_height, P3D)
@@ -49,46 +111,13 @@ def setup():
     draw()
 
 def draw():
-    global dropping, endgame_coor, endgame_prevtime
-    if gameplay:
-        #environment
-        background(0)
-        camera(screen_width/2, height*5/6, (height/2)/tan(PI/6)*1.1, width/2, height*2/3, 0, 0, 1, 0)
-        rotateX(-PI/5)
-        drawBackground()
-        
-        #updating
-        if dropping:
-            initShape()
-        current_shape.checkBounds(world_size)
-        bottomlayers.checkClear(layer_num_list, world_size, bottom_layers, bottom_layers_colors)
-        dropping = current_shape.checkStop(bottom_layers, bottom_layers_colors, dropping, layer_num_list)
-        
-        #display
-        current_shape.displayShape(origins, scaling, current_u)
-        bottomlayers.displayBottomLayers(bottom_layers, bottom_layers_colors, origins, scaling, current_u)
-        
-        endGame()
-
-    else:
-        #end screen
-        background(0)
-        camera(screen_width/2, height*5/6, (height/2)/tan(PI/6)*1.1, width/2, height*2/3, 0, 0, 1, 0)
-        rotateX(-PI/5)
-        drawBackground()
-        bottomlayers.displayBottomLayers(bottom_layers, bottom_layers_colors, origins, scaling, current_u)
-        textSize(100)
-        textAlign(CENTER)
-        fill(*[random.random()*255 for i in range(3)])
-        text("You suck", *endgame_coor)
-        if time.time() - endgame_prevtime > 1:
-            endgame_coor = [random.random()*screen_width, random.random()*screen_height, random.random()*200+100]
-            endgame_prevtime = time.time()
+    screen_switcher.get(gameplay)()
 
 def keyPressed():
+    print(keyCode)
     #interactivity for moving shape
-    global current_shape, current_u
-    switcher = {
+    global current_shape, current_u, gameplay
+    shape_switcher = {
         #Translations
         'q': [1,1], 'a': [0,-1], 
         'w': [2,-1], 's': [2,1], 
@@ -109,18 +138,30 @@ def keyPressed():
         #Adjust U coordinate
         'z': -1, 'x': 1
     }
-    if str(key) in 'qawsed':
-        current_shape.transShape(*switcher.get(key), bottom_layers=bottom_layers)
-    if str(key) in 'rftgyhujikol':
-        current_shape.rotShape(*switcher.get(key), bottom_layers=bottom_layers, world_size=world_size)
-    if str(key) in 'z':
-        if current_u[0] > 0:
-            current_u = [value + switcher.get(key) for value in current_u]
-            print(current_u)
-    if str(key) in 'x':
-        if current_u[2] < world_size[3]:
-            current_u = [value + switcher.get(key) for value in current_u]
-    
+    if gameplay == 0:
+        if key == ' ':
+            gameplay = 1
+    if gameplay == 1:
+        if str(key) in 'qawsed':
+            current_shape.transShape(*shape_switcher.get(key), bottom_layers=bottom_layers)
+        if str(key) in 'rftgyhujikol':
+            current_shape.rotShape(*shape_switcher.get(key), bottom_layers=bottom_layers, world_size=world_size)
+        if str(key) in 'z':
+            if current_u[0] > 0:
+                current_u = [value + shape_switcher.get(key) for value in current_u]
+                print(current_u)
+        if str(key) in 'x':
+            if current_u[2] < world_size[3]:
+                current_u = [value + shape_switcher.get(key) for value in current_u]
+    if gameplay == 2:
+        if key == ' ':
+            gameplay = 1   
+        if key == ENTER or key == RETURN:
+            gameplay = 0 
+        
+#-----------------------------------------------------------------------------------------
+# Misc. functions
+#-----------------------------------------------------------------------------------------
 
 def initShape():
     #initialises new moving shape
@@ -134,8 +175,12 @@ def endGame():
     global gameplay
     for coor in bottom_layers:
         if coor[3] == world_size[3]-1:
-            gameplay = False
+            gameplay = 2
             return
+
+#-----------------------------------------------------------------------------------------
+# Draw Axes
+#-----------------------------------------------------------------------------------------
 
 def drawBackground():
     #Draws grids and labels
