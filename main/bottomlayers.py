@@ -32,9 +32,6 @@ def display_func2(world_coor, block_color, ax, origin, scaling):
 
 def displayBottomLayers(bottom_layers, bottom_layers_colors, origins, scaling, current_u):
         axes = [[0,1,2],[0,3,2],[0,3,1],[1,3,2]]
-
-    
-
         #display in xyz grid
         for i in range(3):
             xyz_cubes = []
