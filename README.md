@@ -52,12 +52,8 @@ Tetris but in 4D. Where normal tetris is played in 2D, this is in 4D. Double the
 </br>
 <h2>Other stuff coming your way:</h2>
 <ul>
-  <li>Legit endgame screen with score and replay</li>
-  <li>Difficulty: speed, shapes</li>
   <li>5-block shapes</li>
   <li>tutorial</li>
-  <li>display controls</li>
-  <li>button to clear a level to prevent rage</li>
 </ul>
 </br>
 5D DLC out soon
