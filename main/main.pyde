@@ -96,7 +96,6 @@ def pauseScreen():
     textMode(SCREEN)
     text("GAME PAUSED", screen_width/2, screen_height/4, 0)
     pause_list.display()
-    controls_table.display()
         
 def endScreen():
     #end screen
