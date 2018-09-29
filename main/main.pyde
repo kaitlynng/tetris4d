@@ -55,6 +55,7 @@ restart_button = widgets.Button('Press spacebar to play again, enter to return t
 pause_list = widgets.Options(['Continue', 'End Game', 'Help Me'],
                              [screen_width*0.6, screen_height*0.32, 0],
                              [900, 80], 0)
+
 helpme_u = 0
 score = 0
 clear_count = 0
@@ -246,6 +247,7 @@ def keyPressed():
         if key == ' ':
             gameplay = 1
             resetGame()
+            return
         if key == ENTER or key == RETURN:
             gameplay = 0 
             resetGame()
@@ -288,7 +290,7 @@ def change_difficulty(option):
 def initShape():
     #initialises new moving shape
     global current_shape, dropping, time_delta
-    current_shape = shapeFunctions.Shape([int(world_size[0]/2), world_size[1], int(world_size[2]/2), world_size[3]], time_delta)
+    current_shape = shapeFunctions.Shape([int(world_size[0]/2), 0, int(world_size[2]/2), world_size[3]], time_delta)
     
     dropping = False
 
@@ -301,7 +303,8 @@ def endGame():
             return
 
 def resetGame():
-    global bottom_layers, bottom_layers_colors, current_u
+    global bottom_layers, bottom_layers_colors, layer_num_list 
+    global current_u, clear_count, score, dropping 
     bottom_layers = []
     bottom_layers_colors = []
     layer_num_list = [0]*world_size[3]
