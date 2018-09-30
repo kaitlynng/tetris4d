@@ -259,7 +259,7 @@ def keyPressed():
             if pause_list.select > 0:
                 pause_list.select -= 1
         if key == 'd':
-            if pause_list.select < len(pause_list.items):
+            if pause_list.select < len(pause_list.items)-1:
                 pause_list.select += 1
         if key == ' ':
             gameplay = (pause_list.select+1)*(pause_list.select in [0,1])+gameplay*(pause_list.select == 2)
