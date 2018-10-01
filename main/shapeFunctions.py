@@ -101,6 +101,7 @@ class Shape:
         stroke(block_stroke)
 
         #display in xyz grid
+        current_u[2] = self.pos_coor[3]
         for i in range(3):
             xyz_cubes = []
             for coor in self.shape_coor:

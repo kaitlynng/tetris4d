@@ -38,12 +38,9 @@ axes_names = [['X', 'Y', 'Z'], ['X', 'U', 'Z'], ['X', 'U', 'Y'], ['Y', 'U', 'Z']
 #variables for updating
 time_delta = 1
 dropping = True
-current_u = [0, 1, 0]
-
-#change current_u
+current_u = [0, 1, 2]
 
 #variables for fixed blocks
-current_shape = 0
 bottom_layers = []
 bottom_layers_colors = []
 layer_num_list = [0]*world_size[3]
@@ -58,7 +55,6 @@ restart_button = widgets.Button('Press spacebar to play again, enter to return t
 pause_list = widgets.Options(['Continue', 'End Game', 'Help Me'],
                              [screen_width*0.6, screen_height*0.32, 0],
                              [900, 80], 0)
-
 helpme_u = 0
 score = 0
 clear_count = 0
@@ -92,8 +88,6 @@ def playingScreen():
     background(0)
     camera(screen_width/2, height*5/6, (height/2)/tan(PI/6)*1.1, width/2, height*2/3, 0, 0, 1, 0)
     rotateX(-PI/5)
-    if dropping:
-        initShape()
     drawBackground()
     textSize(40)
     fill(210)
@@ -101,13 +95,15 @@ def playingScreen():
     text("Press spacebar to pause", 0.45*screen_width, 0.3*screen_height, 0)
     
     #updating
+    if dropping:
+        initShape()
     current_shape.checkBounds(world_size)
     bottomlayers.checkClear(layer_num_list, world_size, bottom_layers, bottom_layers_colors, score)
     dropping = current_shape.checkStop(bottom_layers, bottom_layers_colors, dropping, layer_num_list)
     
     #display
     current_shape.displayShape(origins, scaling, current_u)
-    bottomlayers.displayBottomLayers(bottom_layers, bottom_layers_colors, current_shape, origins, scaling, current_u)
+    bottomlayers.displayBottomLayers(bottom_layers, bottom_layers_colors, origins, scaling, current_u)
     endGame()
 
 def pauseScreen():
@@ -115,7 +111,7 @@ def pauseScreen():
     camera(screen_width/2, height*5/6, (height/2)/tan(PI/6)*1.1, width/2, height*2/3, 0, 0, 1, 0)
     rotateX(-PI/5)
     drawBackground()
-    bottomlayers.displayBottomLayers(bottom_layers, bottom_layers_colors, current_shape, origins, scaling, current_u)
+    bottomlayers.displayBottomLayers(bottom_layers, bottom_layers_colors, origins, scaling, current_u)
     current_shape.displayShape(origins, scaling, current_u)
     textSize(120)
     textAlign(CENTER)
@@ -140,7 +136,7 @@ def endScreen():
     camera(screen_width/2, height*5/6, (height/2)/tan(PI/6)*1.1, width/2, height*2/3, 0, 0, 1, 0)
     rotateX(-PI/5)
     drawBackground()
-    bottomlayers.displayBottomLayers(bottom_layers, bottom_layers_colors, current_shape, origins, scaling, current_u)
+    bottomlayers.displayBottomLayers(bottom_layers, bottom_layers_colors, origins, scaling, current_u)
     textSize(150)
     textAlign(CENTER, CENTER)
     fill(*[random.random()*255 for i in range(3)])
@@ -160,7 +156,7 @@ def helpMeScreen():
     camera(screen_width/2, height*5/6, (height/2)/tan(PI/6)*1.1, width/2, height*2/3, 0, 0, 1, 0)
     rotateX(-PI/5)
     drawBackground()
-    bottomlayers.displayBottomLayers(bottom_layers, bottom_layers_colors, current_shape, origins, scaling, current_u)
+    bottomlayers.displayBottomLayers(bottom_layers, bottom_layers_colors, origins, scaling, current_u)
     current_shape.displayShape(origins, scaling, current_u)
     textSize(120)
     textAlign(CENTER)
@@ -216,8 +212,6 @@ def keyPressed():
         'o': [1, 1], 'l': [1, 0],
         #switch U
         'z': -1, 'x': 1
-    #CALL LOCK AND UNLOCK HERE
-            
     }
     if gameplay == 0:
         switcher = {
@@ -234,10 +228,10 @@ def keyPressed():
     if gameplay in [1,2,3,4]:
         if key == 'z':
             if current_u[0] > 0:
-                current_u = [value + shape_switcher.get(key) for value in current_u[0:2]]
+                current_u = [value + shape_switcher.get(key) for value in current_u]
         if key == 'x':
-            if current_u[1] < world_size[3]:
-                current_u = [value + shape_switcher.get(key) for value in current_u[0:2]]
+            if current_u[2] < world_size[3]:
+                current_u = [value + shape_switcher.get(key) for value in current_u]
     
     if gameplay == 1:
         if str(key) in 'qawsed':
@@ -253,7 +247,6 @@ def keyPressed():
         if key == ' ':
             gameplay = 1
             resetGame()
-            return
         if key == ENTER or key == RETURN:
             gameplay = 0 
             resetGame()
@@ -284,7 +277,7 @@ def keyPressed():
         if key == ' ':
             helpMe()
             return
-        
+
 #-----------------------------------------------------------------------------------------
 # Misc. functions
 #-----------------------------------------------------------------------------------------
@@ -296,7 +289,7 @@ def change_difficulty(option):
 def initShape():
     #initialises new moving shape
     global current_shape, dropping, time_delta
-    current_shape = shapeFunctions.Shape([int(world_size[0]/2), 0, int(world_size[2]/2), world_size[3]], time_delta)
+    current_shape = shapeFunctions.Shape([int(world_size[0]/2), world_size[1], int(world_size[2]/2), world_size[3]], time_delta)
     
     dropping = False
 
@@ -309,8 +302,7 @@ def endGame():
             return
 
 def resetGame():
-    global bottom_layers, bottom_layers_colors, layer_num_list 
-    global current_u, clear_count, score, dropping 
+    global bottom_layers, bottom_layers_colors, current_u
     bottom_layers = []
     bottom_layers_colors = []
     layer_num_list = [0]*world_size[3]
@@ -419,7 +411,7 @@ def drawAxesName(origin, grid_size, axes_name):
     popMatrix()
     
 def drawUValues(origins, grid_size, current_u):
-    #draw U-value labels    
+    #draw U-value labels
     
     textSize(axes_name_size)
     fill(axes_name_color)
