@@ -50,10 +50,5 @@ Tetris but in 4D. Where normal tetris is played in 2D, this is in 4D. Double the
 </table>
 </ol>
 </br>
-<h2>Other stuff coming your way:</h2>
-<ul>
-  <li>5-block shapes</li>
-  <li>tutorial</li>
-</ul>
 </br>
 5D DLC out soon
